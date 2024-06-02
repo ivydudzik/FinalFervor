@@ -25,13 +25,14 @@ let config = {
     width: 1440,
     height: 900,
     fps: { forceSetTimeOut: true, target: 144 },
-    scene: [Load, Menu, Battle, Win, Lose]
+    scene: [Load, Menu, Battle, UI, Win, Lose],
+    backgroundColor: '#849141'
 }
 
 // BORROWED FROM EXAMPLE CODE
 // We may want to use a different system for sprites/text/vfx? I don't know why those things need to be global.
 var cursors;
-const SCALE = 2.0;
+const SCALE = 4.0;
 var my = { sprite: {}, text: {}, vfx: {} };
 
 const game = new Phaser.Game(config);

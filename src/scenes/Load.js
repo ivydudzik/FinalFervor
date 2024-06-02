@@ -9,8 +9,10 @@ class Load extends Phaser.Scene {
         // scifi (1) (1).mp3 by kbrecordzz -- https://freesound.org/s/641926/ -- License: Creative Commons 0
         this.load.audio('pingSound', 'Switch.wav');
 
-        this.load.setPath("./assets/");
-        this.load.image("playerSprite", "pack (drag from me)/Red Sprite V3/Red Sprite/@Extra/Side Portrait Large.png");
+        this.load.setPath("./assets/art");
+        this.load.image("playerSprite", "Player.png");
+        this.load.image("furDevilSprite", "Fur Devil.png");
+        this.load.image("arrow", "Arrow.png");
     }
 
     create() {
