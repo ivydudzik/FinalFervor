@@ -1,4 +1,4 @@
-class Bullet extends Phaser.Physics.Arcade.Image {
+class Bullet extends Phaser.Physics.Arcade.Sprite {
     fire(x, y, vx, vy) {
         this.enableBody(true, x, y, true, true);
         this.setVelocity(vx, vy);

@@ -4,18 +4,19 @@ class Battle extends Phaser.Scene {
     }
 
     init() {
+        this.playerSpeed = 75;
+
+        this.arrowSpeed = 250;
     }
 
     create() {
+        this.init();
+
         // Create UI
         this.scene.run("UIScene");
 
         // Set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
-
-        // Create a Key to Restart, Toggle Debug Mode
-        this.createRestartToggleKey('keydown-R');
-        this.createDebugToggleKey('keydown-D');
 
         // Add Descriptive Text
         document.getElementById('description').innerHTML = '<h3>ARROW KEYS to move // MOUSE to aim // MOUSE LEFT to shoot </h3>'
@@ -63,15 +64,18 @@ class Battle extends Phaser.Scene {
         this.cameras.main.setDeadzone(50, 50);
         this.cameras.main.setZoom(SCALE);
 
-        // // Make cursor follow mouse
-        // this.input.on('pointermove', (pointer) => {
-        //     this.playerCursor.x = pointer.worldX;
-        //     this.playerCursor.y = pointer.worldY;
-        // });
+        // // CONTROLS
+        // Set up Phaser-provided cursor key input containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
+        this.cursors = this.input.keyboard.createCursorKeys();
+
+        // Create a Key to Restart, Toggle Debug Mode
+        this.createRestartToggleKey('keydown-R');
+        this.createDebugToggleKey('keydown-D');
 
         // Make bullets fire on mouseclick
         this.input.on('pointerdown', () => {
-            this.bulletGroup.fire(this.player.x, this.player.y, 0, 300);
+            let playerToMouse = new Phaser.Math.Vector2(this.input.activePointer.position.x - this.player.body.position.x, this.input.activePointer.position.y - this.player.body.position.y).normalize();
+            this.bulletGroup.fire(this.player.x, this.player.y, playerToMouse.x * this.arrowSpeed, playerToMouse.y * this.arrowSpeed);
         });
 
         // Make bullets fire on mouseclick
@@ -109,6 +113,26 @@ class Battle extends Phaser.Scene {
 
     update() {
         // Update Loop Here
+        this.player.setVelocity(0);
+
+        if (this.cursors.left.isDown) {
+            this.player.setVelocityX(-1);
+        }
+        else if (this.cursors.right.isDown) {
+            this.player.setVelocityX(1);
+        }
+
+        if (this.cursors.up.isDown) {
+            this.player.setVelocityY(-1);
+        }
+        else if (this.cursors.down.isDown) {
+            this.player.setVelocityY(1);
+        }
+
+        this.player.body.velocity.normalize()
+        this.player.body.velocity.x *= this.playerSpeed;
+        this.player.body.velocity.y *= this.playerSpeed;
+
 
     }
 
