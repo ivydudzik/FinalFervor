@@ -3,6 +3,8 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         this.enableBody(true, x, y, true, true);
         this.setVelocity(vx, vy);
         this.setRotation(this.body.velocity.angle() + Phaser.Math.PI2 / 4);
+        // Will be set by battle scene:
+        this.deathEvent = null;
     }
 
     onCreate() {
@@ -13,5 +15,16 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
 
     onWorldBounds() {
         this.disableBody(true, true);
+        this.deathEvent.remove();
+    }
+
+    onCollision() {
+        this.disableBody(true, true);
+        this.deathEvent.remove();
+    }
+
+    onExpire() {
+        this.disableBody(true, true);
+        this.deathEvent.remove();
     }
 }

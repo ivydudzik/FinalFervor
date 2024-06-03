@@ -13,6 +13,8 @@ class BulletGroup extends Phaser.Physics.Arcade.Group {
         if (bullet) {
             bullet.fire(x, y, vx, vy);
         }
+
+        return bullet;
     }
 
     onCreate(bullet) {

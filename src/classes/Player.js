@@ -7,21 +7,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.speed = 75;
         this.fireDelay = 500;
         this.arrowSpeed = 250;
+        this.arrowLifetime = 500;
 
+        // State tracking to allow continuous shooting
         this.isWaitingToFire = false;
         this.lastFiredAt = 0;
-
-
-        // Tracks current player upgrades and stores constant stats used by the player controller when certain upgrades are possesed
-        this.upgrades = {
-            "healthUpgrade": { "count": 0, "max_count": 3, "heartAmount": 5 },
-            "moveSpeedUpgrade": { "count": 0, "max_count": 3, "multiplier": 2 },
-
-            "piercingUpgrade": { "count": 0, "max_count": 1 },
-
-        }
-
-        this.moveSpeedUpgradePower = 2;
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -61,8 +51,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.body.velocity.normalize()
 
-        this.body.velocity.x *= this.speed * (this.upgrades.moveSpeedUpgrade.multiplier ** this.upgrades.moveSpeedUpgrade.count);
-        this.body.velocity.y *= this.speed * (this.upgrades.moveSpeedUpgrade.multiplier ** this.upgrades.moveSpeedUpgrade.count);
+        this.body.velocity.x *= this.speed;
+        this.body.velocity.y *= this.speed;
     }
 
 }

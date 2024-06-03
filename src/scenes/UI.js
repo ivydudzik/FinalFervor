@@ -35,9 +35,9 @@ class UI extends Phaser.Scene {
         this.upgradeUI["upgradePanelLeft"].setInteractive();
         this.upgradeUI["upgradePanelCenter"].setInteractive();
         this.upgradeUI["upgradePanelRight"].setInteractive();
-        this.upgradeUI["upgradePanelLeft"].on("pointerdown", () => { this.gameScene.upgradeManager.chooseLeftUpgrade(); });
-        this.upgradeUI["upgradePanelCenter"].on("pointerdown", () => { this.gameScene.upgradeManager.chooseCenterUpgrade(); }, this);
-        this.upgradeUI["upgradePanelRight"].on("pointerdown", () => { this.gameScene.upgradeManager.chooseRightUpgrade(); }, this);
+        this.upgradeUI["upgradePanelLeft"].on("pointerdown", () => { this.gameScene.upgradeManager.chooseUpgrade("Left"); });
+        this.upgradeUI["upgradePanelCenter"].on("pointerdown", () => { this.gameScene.upgradeManager.chooseUpgrade("Center"); }, this);
+        this.upgradeUI["upgradePanelRight"].on("pointerdown", () => { this.gameScene.upgradeManager.chooseUpgrade("Right"); }, this);
 
         this.hideUpgradeUI();
         // this.setUpgradeText("Center", "Body", "This was changed recently! OH GOD!\n\n+100 Pogs\n+1 Pogchamps")

@@ -139,7 +139,14 @@ class Battle extends Phaser.Scene {
         // Calculate Arrow Angle
         let pointerInCameraSpace = this.input.activePointer.positionToCamera(this.cameras.main);
         let playerToMouse = new Phaser.Math.Vector2(pointerInCameraSpace.x - this.player.body.position.x - (this.player.width / 2), pointerInCameraSpace.y - this.player.body.position.y - (this.player.height / 2)).normalize();
-        this.bulletGroup.fire(this.player.x, this.player.y, playerToMouse.x * this.player.arrowSpeed, playerToMouse.y * this.player.arrowSpeed);
+        // Fire Arrow
+        let bullet = this.bulletGroup.fire(this.player.x, this.player.y, playerToMouse.x * this.player.arrowSpeed, playerToMouse.y * this.player.arrowSpeed, this.player.arrowLifetime);
+        // Destine each arrow for death
+        bullet.deathEvent = this.time.addEvent({
+            delay: this.player.arrowLifetime, // in ms
+            callback: bullet.onExpire,
+            callbackScope: bullet,
+        });
     }
 
     addEnemyBulletCollision(collidingEnemy, collidingBulletGroup) {
@@ -149,7 +156,7 @@ class Battle extends Phaser.Scene {
             // const { x, y } = bullet.body.center;
 
             enemy.takeDamage(1);
-            bullet.disableBody(true, true);
+            bullet.onCollision();
 
             if (enemy.health <= 0) {
                 // enemy.body.checkCollision.none = true;
