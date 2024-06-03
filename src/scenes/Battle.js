@@ -63,17 +63,38 @@ class Battle extends Phaser.Scene {
         this.cameras.main.setZoom(SCALE);
 
         // // CONTROLS
-
         // Create a Key to Restart, Toggle Debug Mode
         this.createRestartToggleKey('keydown-R');
         this.createDebugToggleKey('keydown-D');
 
-        // Make bullets fire on mouseclick
+        // Make bullets start fire on mouseclick
         this.input.on('pointerdown', () => {
-            let pointerInCameraSpace = this.input.activePointer.positionToCamera(this.cameras.main);
-            // CJAMGE TP S{PROTE WODTJJ}
-            let playerToMouse = new Phaser.Math.Vector2(pointerInCameraSpace.x - this.player.body.position.x - 8, pointerInCameraSpace.y - this.player.body.position.y - 12).normalize();
-            this.bulletGroup.fire(this.player.x, this.player.y, playerToMouse.x * this.player.arrowSpeed, playerToMouse.y * this.player.arrowSpeed);
+            if (!this.player.isWaitingToFire) {
+                this.player.isWaitingToFire = true;
+                let waitTime = Phaser.Math.Clamp(this.player.fireDelay - (this.time.now - this.player.lastFiredAt), 0, this.player.fireDelay);
+                this.attackStartCooldownEvent = this.time.addEvent({
+                    delay: waitTime,
+                    callback: () => {
+                        this.player.isWaitingToFire = false;
+                        this.playerFire();
+                        this.attackRateCooldownEvent = this.time.addEvent({
+                            delay: this.player.fireDelay, // in ms
+                            callback: this.playerFire,
+                            callbackScope: this,
+                            loop: true
+                        });
+                    }
+                });
+            }
+        });
+
+        // Make bullets stop fire on mouseup
+        this.input.on('pointerup', () => {
+            if (this.player.isWaitingToFire) {
+                this.attackStartCooldownEvent.remove();
+                this.player.isWaitingToFire = false;
+            }
+            this.attackRateCooldownEvent.remove();
         });
 
         // Make bullets fire on mouseclick
@@ -85,16 +106,6 @@ class Battle extends Phaser.Scene {
         this.input.keyboard.on('keydown-ONE', () => {
             this.upgradeManager.levelUp();
         });
-
-
-        // Cruelly, make player take damage on mouseclick
-        this.input.on("pointerdown", () => {
-            console.log("player takes 1 damage!");
-            this.damageSound = this.sound.add('pingSound');
-            this.damageSound.setVolume(0.1);
-            this.damageSound.play();
-            // this.player.takeDamage(1);
-        }, this);
     }
 
     win() {
@@ -119,6 +130,18 @@ class Battle extends Phaser.Scene {
         this.player.update();
     }
 
+    playerFire() {
+        this.player.lastFiredAt = this.time.now;
+        // Play attack sound
+        this.attackSound = this.sound.add('pingSound');
+        this.attackSound.setVolume(0.1);
+        this.attackSound.play();
+        // Calculate Arrow Angle
+        let pointerInCameraSpace = this.input.activePointer.positionToCamera(this.cameras.main);
+        let playerToMouse = new Phaser.Math.Vector2(pointerInCameraSpace.x - this.player.body.position.x - (this.player.width / 2), pointerInCameraSpace.y - this.player.body.position.y - (this.player.height / 2)).normalize();
+        this.bulletGroup.fire(this.player.x, this.player.y, playerToMouse.x * this.player.arrowSpeed, playerToMouse.y * this.player.arrowSpeed);
+    }
+
     addEnemyBulletCollision(collidingEnemy, collidingBulletGroup) {
         this.physics.add.overlap(collidingEnemy, collidingBulletGroup, (enemy, bullet) => {
             console.log("bullet collision");
@@ -129,9 +152,10 @@ class Battle extends Phaser.Scene {
             bullet.disableBody(true, true);
 
             if (enemy.health <= 0) {
-                enemy.body.checkCollision.none = true;
-                enemy.setActive(false);
-                enemy.setVisible(false);
+                // enemy.body.checkCollision.none = true;
+                // enemy.setActive(false);
+                // enemy.setVisible(false);
+                enemy.destroy();
             }
         });
     }

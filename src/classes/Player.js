@@ -2,9 +2,15 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame, health) {
         super(scene, x, y, texture, frame);
 
+        // Stats
         this.health = health;
         this.speed = 75;
+        this.fireDelay = 500;
         this.arrowSpeed = 250;
+
+        this.isWaitingToFire = false;
+        this.lastFiredAt = 0;
+
 
         // Tracks current player upgrades and stores constant stats used by the player controller when certain upgrades are possesed
         this.upgrades = {
