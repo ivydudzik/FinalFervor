@@ -23,17 +23,17 @@ class Battle extends Phaser.Scene {
         // Set map bounds
         this.physics.world.setBounds(0, 0, game.config.width, game.config.height);
 
-        // Create the main player sprite
-        this.player = new Player(this, game.config.width / 2, game.config.height / 2, "playerSprite", null, 20);
-
-        // Creat temp enemy
-        this.enemy = new Enemy(this, game.config.width / 2, game.config.height / 2 + 50, "furDevilSprite", null, 3);
-
         // Creat temp forest features
         this.grass = [];
         this.grass += this.add.sprite(game.config.width / 2 + 16, game.config.height / 2 + 64, "grass");
         this.grass += this.add.sprite(game.config.width / 2 - 128, game.config.height / 2 + 32, "grass");
         this.grass += this.add.sprite(game.config.width / 2 + 144, game.config.height / 2 - 64, "grass");
+
+        // Create the main player sprite
+        this.player = new Player(this, game.config.width / 2, game.config.height / 2, "playerSprite", null, 20);
+
+        // Creat temp enemy
+        this.testEnemy = new Enemy(this, game.config.width / 2, game.config.height / 2 + 50, "furDevilSprite", null, 3);
 
         // Create Enemy Manager
         this.enemyManager = new EnemyManager(this);
@@ -52,20 +52,7 @@ class Battle extends Phaser.Scene {
         });
 
         // Enemy x Player Bullet Collision
-        this.physics.add.overlap(this.enemy, this.bulletGroup, (enemy, bullet) => {
-            console.log("bullet collision");
-            // for visual on impact
-            // const { x, y } = bullet.body.center;
-
-            enemy.takeDamage(3);
-            bullet.disableBody(true, true);
-
-            if (enemy.health <= 0) {
-                enemy.body.checkCollision.none = true;
-                enemy.setActive(false);
-                enemy.setVisible(false);
-            }
-        });
+        this.addEnemyBulletCollision(this.testEnemy, this.bulletGroup);
 
         // Create Upgrade Manager
         this.upgradeManager = new UpgradeManager(this, this.UIScene, this.player);
@@ -129,10 +116,24 @@ class Battle extends Phaser.Scene {
     }
 
     update() {
-
         this.player.update();
+    }
 
+    addEnemyBulletCollision(collidingEnemy, collidingBulletGroup) {
+        this.physics.add.overlap(collidingEnemy, collidingBulletGroup, (enemy, bullet) => {
+            console.log("bullet collision");
+            // for visual on impact
+            // const { x, y } = bullet.body.center;
 
+            enemy.takeDamage(1);
+            bullet.disableBody(true, true);
+
+            if (enemy.health <= 0) {
+                enemy.body.checkCollision.none = true;
+                enemy.setActive(false);
+                enemy.setVisible(false);
+            }
+        });
     }
 
     createDebugToggleKey(key) {
