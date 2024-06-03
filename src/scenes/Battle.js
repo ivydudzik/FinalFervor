@@ -12,7 +12,6 @@ class Battle extends Phaser.Scene {
 
         // Create UI
         this.scene.run("UIScene");
-        this.UIScene = this.scene.get('UIScene');
 
         // Set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
@@ -23,17 +22,11 @@ class Battle extends Phaser.Scene {
         // Set map bounds
         this.physics.world.setBounds(0, 0, game.config.width, game.config.height);
 
-        // Creat temp forest features
-        this.grass = [];
-        this.grass += this.add.sprite(game.config.width / 2 + 16, game.config.height / 2 + 64, "grass");
-        this.grass += this.add.sprite(game.config.width / 2 - 128, game.config.height / 2 + 32, "grass");
-        this.grass += this.add.sprite(game.config.width / 2 + 144, game.config.height / 2 - 64, "grass");
-
         // Create the main player sprite
         this.player = new Player(this, game.config.width / 2, game.config.height / 2, "playerSprite", null, 20);
 
         // Creat temp enemy
-        this.testEnemy = new Enemy(this, game.config.width / 2, game.config.height / 2 + 50, "furDevilSprite", null, 3);
+        this.enemy = new Enemy(this, game.config.width / 2, game.config.height / 2 + 50, "furDevilSprite", null, 3);
 
         // Create Enemy Manager
         this.enemyManager = new EnemyManager(this);
@@ -52,17 +45,29 @@ class Battle extends Phaser.Scene {
         });
 
         // Enemy x Player Bullet Collision
-        this.addEnemyBulletCollision(this.testEnemy, this.bulletGroup);
+        this.physics.add.overlap(this.enemy, this.bulletGroup, (enemy, bullet) => {
+            console.log("bullet collision");
+            // for visual on impact
+            // const { x, y } = bullet.body.center;
 
-        // Create Upgrade Manager
-        this.upgradeManager = new UpgradeManager(this, this.UIScene, this.player);
+            enemy.takeDamage(3);
+            bullet.disableBody(true, true);
 
-        // Configure Camera
+            if (enemy.health <= 0) {
+                enemy.body.checkCollision.none = true;
+                enemy.setActive(false);
+                enemy.setVisible(false);
+            }
+        });
+
+
+        // Configure Cameradd
         this.cameras.main.startFollow(this.player);
         //this.cameras.main.setDeadzone(50, 50);
         this.cameras.main.setZoom(SCALE);
 
         // // CONTROLS
+
 
         // Create a Key to Restart, Toggle Debug Mode
         this.createRestartToggleKey('keydown-R');
@@ -80,12 +85,6 @@ class Battle extends Phaser.Scene {
         this.input.keyboard.on('keydown-A', () => {
             this.player.setVelocity(0, 100);
         });
-
-        // Make upgrade menu come up on input 1
-        this.input.keyboard.on('keydown-ONE', () => {
-            this.upgradeManager.levelUp();
-        });
-
 
         // Cruelly, make player take damage on mouseclick
         this.input.on("pointerdown", () => {
@@ -116,24 +115,10 @@ class Battle extends Phaser.Scene {
     }
 
     update() {
+
         this.player.update();
-    }
 
-    addEnemyBulletCollision(collidingEnemy, collidingBulletGroup) {
-        this.physics.add.overlap(collidingEnemy, collidingBulletGroup, (enemy, bullet) => {
-            console.log("bullet collision");
-            // for visual on impact
-            // const { x, y } = bullet.body.center;
 
-            enemy.takeDamage(1);
-            bullet.disableBody(true, true);
-
-            if (enemy.health <= 0) {
-                enemy.body.checkCollision.none = true;
-                enemy.setActive(false);
-                enemy.setVisible(false);
-            }
-        });
     }
 
     createDebugToggleKey(key) {
