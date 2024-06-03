@@ -28,6 +28,12 @@ class Battle extends Phaser.Scene {
         // Creat temp enemy
         this.enemy = new Enemy(this, game.config.width / 2, game.config.height / 2 + 50, "furDevilSprite", null, 3);
 
+        // Creat temp forest features
+        this.grass = [];
+        this.grass += this.add.sprite(game.config.width / 2 + 16, game.config.height / 2 + 64, "grass");
+        this.grass += this.add.sprite(game.config.width / 2 - 128, game.config.height / 2 + 32, "grass");
+        this.grass += this.add.sprite(game.config.width / 2 + 144, game.config.height / 2 - 64, "grass");
+
         // Create Player Bullets
         this.bulletGroup = this.add.existing(
             new BulletGroup(this.physics.world, this, { name: 'bulletGroup' })

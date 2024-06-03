@@ -10,7 +10,9 @@ let config = {
     parent: 'phaser-game',
     type: Phaser.CANVAS,
     render: {
-        pixelArt: true
+        pixelArt: true,
+        antialias: false,
+
     },
     physics: {
         default: 'arcade',
