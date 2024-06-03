@@ -35,6 +35,9 @@ class Battle extends Phaser.Scene {
         this.grass += this.add.sprite(game.config.width / 2 - 128, game.config.height / 2 + 32, "grass");
         this.grass += this.add.sprite(game.config.width / 2 + 144, game.config.height / 2 - 64, "grass");
 
+        // Create Enemy Manager
+        this.enemyManager = new EnemyManager(this);
+
         // Create Player Bullets
         this.bulletGroup = this.add.existing(
             new BulletGroup(this.physics.world, this, { name: 'bulletGroup' })
