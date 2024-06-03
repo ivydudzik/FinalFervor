@@ -12,6 +12,7 @@ class Battle extends Phaser.Scene {
 
         // Create UI
         this.scene.run("UIScene");
+        this.UIScene = this.scene.get('UIScene');
 
         // Set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
@@ -63,14 +64,15 @@ class Battle extends Phaser.Scene {
             }
         });
 
+        // Create Upgrade Manager
+        this.upgradeManager = new UpgradeManager(this, this.UIScene, this.player);
 
-        // Configure Cameradd
+        // Configure Camera
         this.cameras.main.startFollow(this.player);
         //this.cameras.main.setDeadzone(50, 50);
         this.cameras.main.setZoom(SCALE);
 
         // // CONTROLS
-
 
         // Create a Key to Restart, Toggle Debug Mode
         this.createRestartToggleKey('keydown-R');
@@ -88,6 +90,12 @@ class Battle extends Phaser.Scene {
         this.input.keyboard.on('keydown-A', () => {
             this.player.setVelocity(0, 100);
         });
+
+        // Make upgrade menu come up on input 1
+        this.input.keyboard.on('keydown-ONE', () => {
+            this.upgradeManager.levelUp();
+        });
+
 
         // Cruelly, make player take damage on mouseclick
         this.input.on("pointerdown", () => {
