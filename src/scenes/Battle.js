@@ -26,7 +26,7 @@ class Battle extends Phaser.Scene {
         this.player = new Player(this, game.config.width / 2, game.config.height / 2, "playerSprite", null, 20);
 
         // Creat temp enemy
-        // this.enemy = new Enemy(this, game.config.width / 2, game.config.height / 2 + 50, "furDevilSprite", null, 3);
+        this.enemy = new Enemy(this, game.config.width / 2, game.config.height / 2 + 50, "furDevilSprite", null, 3);
 
         // Create Enemy Manager
         this.enemyManager = new EnemyManager(this);
