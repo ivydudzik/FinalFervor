@@ -8,6 +8,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.fireDelay = 500;
         this.arrowSpeed = 250;
         this.arrowLifetime = 500;
+        this.arrowDamage = 1;
+        this.arrowSize = 1; // TO DO
+        this.dashCooldown = 1500; // TO DO
+        this.dashCharges = 1; // TO DO
 
         // State tracking to allow continuous shooting
         this.isWaitingToFire = false;

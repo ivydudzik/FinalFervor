@@ -44,7 +44,7 @@ class Battle extends Phaser.Scene {
         );
         this.bulletGroup.createMultiple({
             key: 'arrow',
-            quantity: 100
+            quantity: 1000
         });
         // Give them an event trigger for when they hit the world bounds
         this.physics.world.on('worldbounds', (body) => {
@@ -94,7 +94,7 @@ class Battle extends Phaser.Scene {
                 this.attackStartCooldownEvent.remove();
                 this.player.isWaitingToFire = false;
             }
-            this.attackRateCooldownEvent.remove();
+            if (this.attackRateCooldownEvent) { this.attackRateCooldownEvent.remove(); }
         });
 
         // Make bullets fire on mouseclick
@@ -104,6 +104,13 @@ class Battle extends Phaser.Scene {
 
         // Make upgrade menu come up on input 1
         this.input.keyboard.on('keydown-ONE', () => {
+            if (this.player.isWaitingToFire) {
+                this.attackStartCooldownEvent.remove();
+                this.player.isWaitingToFire = false;
+            }
+            if (this.attackRateCooldownEvent) { this.attackRateCooldownEvent.remove(); }
+
+
             this.upgradeManager.levelUp();
         });
     }
@@ -142,11 +149,13 @@ class Battle extends Phaser.Scene {
         // Fire Arrow
         let bullet = this.bulletGroup.fire(this.player.x, this.player.y, playerToMouse.x * this.player.arrowSpeed, playerToMouse.y * this.player.arrowSpeed, this.player.arrowLifetime);
         // Destine each arrow for death
-        bullet.deathEvent = this.time.addEvent({
-            delay: this.player.arrowLifetime, // in ms
-            callback: bullet.onExpire,
-            callbackScope: bullet,
-        });
+        if (bullet) {
+            bullet.deathEvent = this.time.addEvent({
+                delay: this.player.arrowLifetime, // in ms
+                callback: bullet.onExpire,
+                callbackScope: bullet,
+            });
+        }
     }
 
     addEnemyBulletCollision(collidingEnemy, collidingBulletGroup) {
@@ -155,7 +164,7 @@ class Battle extends Phaser.Scene {
             // for visual on impact
             // const { x, y } = bullet.body.center;
 
-            enemy.takeDamage(1);
+            enemy.takeDamage(this.player.arrowDamage);
             bullet.onCollision();
 
             if (enemy.health <= 0) {
