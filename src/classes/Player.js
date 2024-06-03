@@ -8,8 +8,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Tracks current player upgrades and stores constant stats used by the player controller when certain upgrades are possesed
         this.upgrades = {
-            "healthUpgrade": { "count": 2, "max_count": 3, "heartAmount": 5 },
-            "moveSpeedUpgrade": { "count": 2, "max_count": 3, "multiplier": 2 },
+            "healthUpgrade": { "count": 0, "max_count": 3, "heartAmount": 5 },
+            "moveSpeedUpgrade": { "count": 0, "max_count": 3, "multiplier": 2 },
 
             "piercingUpgrade": { "count": 0, "max_count": 1 },
 

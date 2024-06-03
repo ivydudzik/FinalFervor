@@ -15,6 +15,12 @@ class Load extends Phaser.Scene {
         this.load.image("bushlingSprite", "Bushling.png");
         this.load.image("stingFlySprite", "StingFly.png");
         this.load.image("arrow", "Arrow.png");
+
+        this.load.image("grass", "Grass.png");
+
+        this.load.setPath("./assets/art/ui");
+        this.load.image("upgradePanel", "Upgrade Panel.png");
+        this.load.image("upgradeTitleRibbon", "Upgrade Title Ribbon.png");
     }
 
     create() {
