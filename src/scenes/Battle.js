@@ -4,9 +4,7 @@ class Battle extends Phaser.Scene {
     }
 
     init() {
-        this.playerSpeed = 75;
 
-        this.arrowSpeed = 250;
     }
 
     create() {
@@ -46,7 +44,8 @@ class Battle extends Phaser.Scene {
         // Enemy x Player Bullet Collision
         this.physics.add.overlap(this.enemy, this.bulletGroup, (enemy, bullet) => {
             console.log("bullet collision");
-            const { x, y } = bullet.body.center;
+            // for visual on impact
+            // const { x, y } = bullet.body.center;
 
             enemy.takeDamage(3);
             bullet.disableBody(true, true);
@@ -59,14 +58,13 @@ class Battle extends Phaser.Scene {
         });
 
 
-        // Configure Camera
-        this.cameras.main.startFollow(this.player, true, 0.25, 0.25);
-        this.cameras.main.setDeadzone(50, 50);
+        // Configure Cameradd
+        this.cameras.main.startFollow(this.player);
+        //this.cameras.main.setDeadzone(50, 50);
         this.cameras.main.setZoom(SCALE);
 
         // // CONTROLS
-        // Set up Phaser-provided cursor key input containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
-        this.cursors = this.input.keyboard.createCursorKeys();
+
 
         // Create a Key to Restart, Toggle Debug Mode
         this.createRestartToggleKey('keydown-R');
@@ -74,8 +72,10 @@ class Battle extends Phaser.Scene {
 
         // Make bullets fire on mouseclick
         this.input.on('pointerdown', () => {
-            let playerToMouse = new Phaser.Math.Vector2(this.input.activePointer.position.x - this.player.body.position.x, this.input.activePointer.position.y - this.player.body.position.y).normalize();
-            this.bulletGroup.fire(this.player.x, this.player.y, playerToMouse.x * this.arrowSpeed, playerToMouse.y * this.arrowSpeed);
+            let pointerInCameraSpace = this.input.activePointer.positionToCamera(this.cameras.main);
+            // CJAMGE TP S{PROTE WODTJJ}
+            let playerToMouse = new Phaser.Math.Vector2(pointerInCameraSpace.x - this.player.body.position.x - 8, pointerInCameraSpace.y - this.player.body.position.y - 12).normalize();
+            this.bulletGroup.fire(this.player.x, this.player.y, playerToMouse.x * this.player.arrowSpeed, playerToMouse.y * this.player.arrowSpeed);
         });
 
         // Make bullets fire on mouseclick
@@ -89,7 +89,7 @@ class Battle extends Phaser.Scene {
             this.damageSound = this.sound.add('pingSound');
             this.damageSound.setVolume(0.1);
             this.damageSound.play();
-            this.player.takeDamage(1);
+            // this.player.takeDamage(1);
         }, this);
     }
 
@@ -112,26 +112,8 @@ class Battle extends Phaser.Scene {
     }
 
     update() {
-        // Update Loop Here
-        this.player.setVelocity(0);
 
-        if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-1);
-        }
-        else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(1);
-        }
-
-        if (this.cursors.up.isDown) {
-            this.player.setVelocityY(-1);
-        }
-        else if (this.cursors.down.isDown) {
-            this.player.setVelocityY(1);
-        }
-
-        this.player.body.velocity.normalize()
-        this.player.body.velocity.x *= this.playerSpeed;
-        this.player.body.velocity.y *= this.playerSpeed;
+        this.player.update();
 
 
     }
@@ -151,6 +133,7 @@ class Battle extends Phaser.Scene {
     createRestartToggleKey(key) {
         this.input.keyboard.on(key, () => {
             this.scene.restart();
+            this.scene.stop("UIScene");
         }, this);
     }
 }
