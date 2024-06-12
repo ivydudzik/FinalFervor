@@ -1,6 +1,7 @@
 class EnemyManager {
-    constructor(scene) {
+    constructor(scene, player) {
         this.scene = scene;
+        this.player = player;
 
         this.waveID = 1;
 
@@ -19,9 +20,9 @@ class EnemyManager {
         }
 
         this.enemyTypes = {
-            1: { health: 3, image: "furDevilSprite" },
-            2: { health: 7, image: "bushlingSprite" },
-            3: { health: 4, image: "stingFlySprite" }
+            1: { health: 3, image: "furDevilSprite", speed: 50, damage: 1 },
+            2: { health: 7, image: "bushlingSprite", speed: 50, damage: 2 },
+            3: { health: 4, image: "stingFlySprite", speed: 50, damage: 1 }
         }
 
         this.waveTimer = this.scene.time.addEvent({
@@ -58,13 +59,13 @@ class EnemyManager {
 
     spawnEnemy(enemyType) {
         // console.log(this.enemyTypes);
-        this.enemy = new Enemy(this.scene, game.config.width / 2 + Phaser.Math.Between(-50, 50), game.config.height / 2 + 50 + Phaser.Math.Between(-50, 50), this.enemyTypes[enemyType].image, null, this.enemyTypes[enemyType].health);
+        this.enemy = new Enemy(this.scene, this.player, game.config.width / 2 + Phaser.Math.Between(-50, 50), game.config.height / 2 + 50 + Phaser.Math.Between(-50, 50), this.enemyTypes[enemyType].image, null, this.enemyTypes[enemyType].health, this.enemyTypes[enemyType].speed, this.enemyTypes[enemyType].damage);
 
         // Enemy x Player Bullet Collision
         this.scene.addEnemyBulletCollision(this.enemy, this.scene.bulletGroup);
     }
 
     update() {
-
+        
     }
 }
