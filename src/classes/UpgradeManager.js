@@ -10,6 +10,14 @@ class UpgradeManager {
             "Right": null,
         }
 
+        this.commonUpgradeNames = [
+            "healthUpgrade", "moveSpeedUpgrade",
+            "attackRateUpgrade", "damageUpgrade",
+            "rangeUpgrade", "arrowSizeUpgrade",
+            "dashChargeUpgrade", "arrowSpeedUpgrade",
+            "tankUpgrade"
+        ];
+
         this.upgrades = {
             "healthUpgrade": {
                 "upgradeName": "healthUpgrade",
@@ -46,6 +54,13 @@ class UpgradeManager {
                 "count": 0, "maxCount": 3,
                 "rangeMultiplier": 1.5
             },
+            "arrowSpeedUpgrade": {
+                "upgradeName": "arrowSpeedUpgrade",
+                "Title": "Arrow Speed",
+                "Body": "You gain ARROW SPEED.\n\n+50% ARROW SPEED",
+                "count": 0, "maxCount": 3,
+                "arrowSpeedMultiplier": 1.5
+            },
             "arrowSizeUpgrade": {
                 "upgradeName": "arrowSizeUpgrade",
                 "Title": "Arrow Size",
@@ -59,6 +74,13 @@ class UpgradeManager {
                 "Body": "You gain an additional DASH CHARGE.\n\n+1 DASH CHARGE",
                 "count": 0, "maxCount": 3,
                 "dashChargesGained": 1
+            },
+            "tankUpgrade": {
+                "upgradeName": "tankUpgrade",
+                "Title": "Tank",
+                "Body": "You gain massive ARROW DMG & SIZE, but lose MOVE SPEED & DASH ABILITY\n\n+100% DMG\n+75% ARR SIZE\n-75% MV SPEED\n-DASH ABILITY",
+                "count": 0, "maxCount": 1,
+                "damageMultiplier": 2, "arrowSizeMultiplier": 1.75, "moveSpeedMultiplier": 0.25, "dashChargesLost": 4
             },
             "piercingUpgrade": {
                 "upgradeName": "piercingUpgrade",
@@ -88,17 +110,31 @@ class UpgradeManager {
     }
 
     levelUp() {
-        // Randomize upgrades based on valid possibilities
-        // Pick 3
-        // Modify UI text to match
+        // TO DO: MAX COUNT CONSIDERATIONS
 
-        // // TEST:
-        // this.upgradeChoices.Left = this.upgrades.attackRateUpgrade;
-        // this.upgradeChoices.Center = this.upgrades.moveSpeedUpgrade;
-        // this.upgradeChoices.Right = this.upgrades.rangeUpgrade;
-        this.upgradeChoices.Left = this.upgrades.attackRateUpgrade;
-        this.upgradeChoices.Center = this.upgrades.damageUpgrade;
-        this.upgradeChoices.Right = this.upgrades.healthUpgrade;
+        // Randomize upgrades based on valid possibilities, never having two of the same upgrade showing
+        let upgradePool = [...this.commonUpgradeNames];
+
+        // for upgrade in pool 
+        //     if upgrade count is greater/equal to upgrade max count, strike from pool
+
+        // for let legendary of burstUpgrade, multishotUpgrade, piercingUpgrade
+        //     if upgrade[legendary.prerequisite].count >= 1 
+        //         add legendary to pool
+
+        let leftUpgrade = upgradePool.splice(Math.floor(Math.random() * upgradePool.length), 1);
+        let centerUpgrade = upgradePool.splice(Math.floor(Math.random() * upgradePool.length), 1);
+        let rightUpgrade = upgradePool.splice(Math.floor(Math.random() * upgradePool.length), 1);
+
+        // Pick 3
+        this.upgradeChoices.Left = this.upgrades[leftUpgrade];
+        this.upgradeChoices.Center = this.upgrades[centerUpgrade];
+        this.upgradeChoices.Right = this.upgrades[rightUpgrade];
+
+        /// DEBUG LEGENDARIES
+        this.upgradeChoices.Left = this.upgrades.piercingUpgrade;
+        this.upgradeChoices.Center = this.upgrades.multishotUpgrade;
+        this.upgradeChoices.Right = this.upgrades.burstUpgrade;
 
         for (let panel of ["Left", "Center", "Right"]) {
             this.UIScene.setUpgradeText(panel, "Body", this.upgradeChoices[panel].Body);
@@ -138,6 +174,10 @@ class UpgradeManager {
                 this.player.arrowLifetime *= this.upgrades.rangeUpgrade.rangeMultiplier;
                 break;
             }
+            case "arrowSpeedUpgrade": {
+                this.player.arrowSpeed *= this.upgrades.arrowSpeedUpgrade.arrowSpeedMultiplier;
+                break;
+            }
             case "arrowSizeUpgrade": {
                 this.player.arrowSize *= this.upgrades.arrowSizeUpgrade.arrowSizeMultiplier;
                 this.player.arrowSpeed *= this.upgrades.arrowSizeUpgrade.arrowSpeedMultiplier;
@@ -145,6 +185,15 @@ class UpgradeManager {
             }
             case "dashChargeUpgrade": {
                 this.player.dashCharges += this.upgrades.dashChargeUpgrade.dashChargesGained;
+                this.player.currentDashCharges += this.upgrades.dashChargeUpgrade.dashChargesGained;
+                break;
+            }
+            case "tankUpgrade": {
+                this.player.arrowDamage *= this.upgrades.tankUpgrade.damageMultiplier;
+                this.player.arrowSize *= this.upgrades.tankUpgrade.arrowSizeMultiplier;
+                this.player.speed *= this.upgrades.tankUpgrade.moveSpeedMultiplier;
+                this.player.dashCharges -= this.upgrades.tankUpgrade.dashChargesLost;
+                this.player.currentDashCharges -= this.upgrades.tankUpgrade.dashChargesLost;
                 break;
             }
             case "piercingUpgrade": {

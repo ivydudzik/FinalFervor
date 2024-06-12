@@ -106,13 +106,12 @@ class Battle extends Phaser.Scene {
             if (this.attackRateCooldownEvent) { this.attackRateCooldownEvent.remove(); }
         });
 
-        // Make bullets start fire on mouseclick
+        // Make player dash if they have charges and are not currently dashing
         this.input.keyboard.on('keydown-CTRL', () => {
             if (!this.player.isDashing && this.player.currentDashCharges >= 1) {
                 this.player.startDash();
                 this.player.currentDashCharges -= 1;
                 this.player.isDashing = true;
-                this.player.lastDashedAt = this.time.now;
                 console.log("dashing!");
                 // Stop dash after dash length
                 this.time.delayedCall(this.player.dashLength, () => {
@@ -128,20 +127,16 @@ class Battle extends Phaser.Scene {
             }
         });
 
-        // Make bullets fire on mouseclick
-        this.input.keyboard.on('keydown-A', () => {
-            this.player.setVelocity(0, 100);
-        });
-
         // Make upgrade menu come up on input 1
         this.input.keyboard.on('keydown-ONE', () => {
+            // Make player stop firing
             if (this.player.isWaitingToFire) {
                 this.attackStartCooldownEvent.remove();
                 this.player.isWaitingToFire = false;
             }
             if (this.attackRateCooldownEvent) { this.attackRateCooldownEvent.remove(); }
 
-
+            // Level up!
             this.upgradeManager.levelUp();
         });
     }
@@ -185,6 +180,7 @@ class Battle extends Phaser.Scene {
         let bullet = this.bulletGroup.fire(this.player.x, this.player.y, playerToMouse.x * this.player.arrowSpeed, playerToMouse.y * this.player.arrowSpeed, this.player.arrowLifetime);
         // Destine each arrow for death
         if (bullet) {
+            bullet.scale = this.player.arrowSize;
             bullet.deathEvent = this.time.addEvent({
                 delay: this.player.arrowLifetime, // in ms
                 callback: bullet.onExpire,
