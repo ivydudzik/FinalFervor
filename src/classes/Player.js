@@ -2,7 +2,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame, health) {
         super(scene, x, y, texture, frame);
 
-        // Stats
+
+        // Stats Changed By Upgrades
         this.health = health;
         this.speed = 75;
         this.fireDelay = 500;
@@ -11,11 +12,20 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.arrowDamage = 1;
         this.arrowSize = 1; // TO DO
         this.dashCooldown = 1500; // TO DO
-        this.dashCharges = 1; // TO DO
+        this.dashCharges = 2; // TO DO
+
+        // Static Stats
+        this.dashSpeedModifier = 10;
+        this.dashLength = 100;
 
         // State tracking to allow continuous shooting
         this.isWaitingToFire = false;
         this.lastFiredAt = 0;
+
+        // State tracking for dash
+        this.currentDashCharges = this.dashCharges;
+        this.isDashing = false;
+        this.lastDashedAt = 0;
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -33,6 +43,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         else {
             this.scene.lose();
         }
+    }
+
+    startDash() {
+        this.speed *= this.dashSpeedModifier;
+    }
+
+    stopDash() {
+        this.speed /= this.dashSpeedModifier;
     }
 
     update() {
@@ -53,7 +71,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityY(1);
         }
 
-        this.body.velocity.normalize()
+        this.body.velocity.normalize();
 
         this.body.velocity.x *= this.speed;
         this.body.velocity.y *= this.speed;

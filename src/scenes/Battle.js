@@ -97,6 +97,37 @@ class Battle extends Phaser.Scene {
             if (this.attackRateCooldownEvent) { this.attackRateCooldownEvent.remove(); }
         });
 
+        // Make bullets stop fire on mouse leave canvas
+        this.input.on('gameout', () => {
+            if (this.player.isWaitingToFire) {
+                this.attackStartCooldownEvent.remove();
+                this.player.isWaitingToFire = false;
+            }
+            if (this.attackRateCooldownEvent) { this.attackRateCooldownEvent.remove(); }
+        });
+
+        // Make bullets start fire on mouseclick
+        this.input.keyboard.on('keydown-CTRL', () => {
+            if (!this.player.isDashing && this.player.currentDashCharges >= 1) {
+                this.player.startDash();
+                this.player.currentDashCharges -= 1;
+                this.player.isDashing = true;
+                this.player.lastDashedAt = this.time.now;
+                console.log("dashing!");
+                // Stop dash after dash length
+                this.time.delayedCall(this.player.dashLength, () => {
+                    this.player.isDashing = false;
+                    this.player.stopDash();
+                    console.log("not dashing!");
+                }, [], this);
+                // Start regen of dash charge
+                this.time.delayedCall(this.player.dashCooldown, () => {
+                    this.player.currentDashCharges += 1;
+                    console.log("dash regained!");
+                }, [], this);
+            }
+        });
+
         // Make bullets fire on mouseclick
         this.input.keyboard.on('keydown-A', () => {
             this.player.setVelocity(0, 100);
@@ -135,6 +166,10 @@ class Battle extends Phaser.Scene {
 
     update() {
         this.player.update();
+    }
+
+    playerDash() {
+
     }
 
     playerFire() {
