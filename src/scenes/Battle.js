@@ -126,19 +126,6 @@ class Battle extends Phaser.Scene {
                 }, [], this);
             }
         });
-
-        // Make upgrade menu come up on input 1
-        this.input.keyboard.on('keydown-ONE', () => {
-            // Make player stop firing
-            if (this.player.isWaitingToFire) {
-                this.attackStartCooldownEvent.remove();
-                this.player.isWaitingToFire = false;
-            }
-            if (this.attackRateCooldownEvent) { this.attackRateCooldownEvent.remove(); }
-
-            // Level up!
-            this.upgradeManager.levelUp();
-        });
     }
 
     win() {
@@ -224,9 +211,7 @@ class Battle extends Phaser.Scene {
             enemy.takeDamage(this.player.arrowDamage);
 
             if (enemy.health <= 0) {
-                // enemy.body.checkCollision.none = true;
-                // enemy.setActive(false);
-                // enemy.setVisible(false);
+                this.givePlayerEXP(enemy.expValue);
                 enemy.destroy();
 
                 // If player has explosive arrows, burst into more arrows
@@ -249,6 +234,24 @@ class Battle extends Phaser.Scene {
                 }
             }
         });
+    }
+
+    givePlayerEXP(expAmount) {
+        this.player.exp += expAmount;
+        if (this.player.exp >= this.player.levelUpRequirements[this.player.level]) {
+            this.player.exp = 0;
+            this.player.level += 1;
+
+            // Make player stop firing
+            if (this.player.isWaitingToFire) {
+                this.attackStartCooldownEvent.remove();
+                this.player.isWaitingToFire = false;
+            }
+            if (this.attackRateCooldownEvent) { this.attackRateCooldownEvent.remove(); }
+
+            // Level up!
+            this.upgradeManager.levelUp();
+        }
     }
 
     addPlayerEnemyCollision(player, enemyGroup) {

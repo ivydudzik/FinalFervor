@@ -30,9 +30,9 @@ class EnemyManager {
         }
 
         this.enemyTypes = {
-            1: { health: 3, image: "furDevilSprite", speed: 50, damage: 1 },
-            2: { health: 7, image: "bushlingSprite", speed: 35, damage: 2 },
-            3: { health: 4, image: "stingFlySprite", speed: 50, damage: 1 }
+            1: { health: 3, image: "furDevilSprite", speed: 50, damage: 1, expValue: 1 },
+            2: { health: 7, image: "bushlingSprite", speed: 35, damage: 2, expValue: 2 },
+            3: { health: 4, image: "stingFlySprite", speed: 50, damage: 1, expValue: 3 }
         }
 
         this.waveTimer = this.scene.time.addEvent({
@@ -77,21 +77,30 @@ class EnemyManager {
 
         var eliteText = "";
         var eliteDmg = 0;
+        var eliteHp = 0;
+        var eliteExp = 0;
 
-        if (elite > 0)
-        {
+        if (elite > 0) {
             eliteText = "Elite";
             eliteDmg = this.enemyTypes[enemyType].damage;
+            eliteHp = this.enemyTypes[enemyType].health;
+            eliteExp = this.enemyTypes[enemyType].expValue;
         }
-        
-        this.enemies[this.totalEnemiesID] = new Enemy(this.scene, this.player, this.player.body.x + (Phaser.Math.Between(75, 150) * offset1), this.player.body.y + (Phaser.Math.Between(75, 150) * offset2), this.enemyTypes[enemyType].image + eliteText, null, this.enemyTypes[enemyType].health, this.enemyTypes[enemyType].speed, this.enemyTypes[enemyType].damage + eliteDmg);
+
+        this.enemies[this.totalEnemiesID] = new Enemy(
+            this.scene, this.player,
+            this.player.body.x + (Phaser.Math.Between(75, 150) * offset1),
+            this.player.body.y + (Phaser.Math.Between(75, 150) * offset2),
+            this.enemyTypes[enemyType].image + eliteText, null,
+            this.enemyTypes[enemyType].health + eliteHp, this.enemyTypes[enemyType].speed,
+            this.enemyTypes[enemyType].damage + eliteDmg, this.enemyTypes[enemyType].expValue + eliteExp);
 
         // add enemy to the group
         this.enemyGroup.add(this.enemies[this.totalEnemiesID]);
 
         // Enemy x Player Bullet Collision
         this.scene.addEnemyBulletCollision(this.enemies[this.totalEnemiesID], this.scene.bulletGroup);
-        
+
         // iterate the total num enemies
         this.totalEnemiesID++;
     }
