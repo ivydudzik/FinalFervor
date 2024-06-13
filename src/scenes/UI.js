@@ -38,18 +38,25 @@ class UI extends Phaser.Scene {
                 { fontSize: '24px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#000" }).setOrigin(0.5, 0.5),
             "upgradeBodyLeft": this.add.text(game.config.width / 4 - 100, game.config.height * 25 / 36 - 325, "L UPGRADE TEXT I SAY WHAT THE UPGRADE DOES\n\n+100 Cats\n-100% Dogs",
                 { fontSize: '24px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#000", wordWrap: { width: 200 } }),
+            "upgradeAnimationLeft": this.add.sprite(game.config.width / 4, game.config.height * 25 / 36 - 175, "level_up"),
+            "upgradeAnimationLeft2": this.add.sprite(game.config.width / 4, game.config.height * 25 / 36, "level_up_2"),
+
 
             "upgradePanelCenter": this.add.sprite(game.config.width * 2 / 4, game.config.height / 2, "upgradePanel").setScale(6),
             "upgradeTitleRibbonCenter": this.add.sprite(game.config.width * 2 / 4, game.config.height * 25 / 36, "upgradeTitleRibbon").setScale(6),
             "upgradeTitleCenter": this.add.text(game.config.width * 2 / 4, game.config.height * 25 / 36, "C UPGRADE", { fontSize: '24px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#000" }).setOrigin(0.5, 0.5),
             "upgradeBodyCenter": this.add.text(game.config.width * 2 / 4 - 100, game.config.height * 25 / 36 - 325, "C UPGRADE TEXT I SAY WHAT THE UPGRADE DOES\n\n+100 Cats\n-100% Dogs",
                 { fontSize: '24px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#000", wordWrap: { width: 200 } }),
+            "upgradeAnimationCenter": this.add.sprite(game.config.width * 2 / 4, game.config.height * 25 / 36 - 175, "level_up"),
+            "upgradeAnimationCenter2": this.add.sprite(game.config.width * 2 / 4, game.config.height * 25 / 36, "level_up_2"),
 
             "upgradePanelRight": this.add.sprite(game.config.width * 3 / 4, game.config.height / 2, "upgradePanel").setScale(6),
             "upgradeTitleRibbonRight": this.add.sprite(game.config.width * 3 / 4, game.config.height * 25 / 36, "upgradeTitleRibbon").setScale(6),
             "upgradeTitleRight": this.add.text(game.config.width * 3 / 4, game.config.height * 25 / 36, "R UPGRADE", { fontSize: '24px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#000" }).setOrigin(0.5, 0.5),
             "upgradeBodyRight": this.add.text(game.config.width * 3 / 4 - 100, game.config.height * 25 / 36 - 325, "R UPGRADE TEXT I SAY WHAT THE UPGRADE DOES\n\n+100 Cats\n-100% Dogs",
                 { fontSize: '24px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#000", wordWrap: { width: 200 } }),
+            "upgradeAnimationRight": this.add.sprite(game.config.width * 3 / 4, game.config.height * 25 / 36 - 175, "level_up"),
+            "upgradeAnimationRight2": this.add.sprite(game.config.width * 3 / 4, game.config.height * 25 / 36, "level_up_2"),
         }
 
         this.upgradeUI["upgradePanelLeft"].setInteractive();
@@ -58,6 +65,17 @@ class UI extends Phaser.Scene {
         this.upgradeUI["upgradePanelLeft"].on("pointerdown", () => { this.gameScene.upgradeManager.chooseUpgrade("Left"); });
         this.upgradeUI["upgradePanelCenter"].on("pointerdown", () => { this.gameScene.upgradeManager.chooseUpgrade("Center"); }, this);
         this.upgradeUI["upgradePanelRight"].on("pointerdown", () => { this.gameScene.upgradeManager.chooseUpgrade("Right"); }, this);
+
+        this.upgradeUI["upgradeAnimationLeft"].setScale(8);
+        this.upgradeUI["upgradeAnimationCenter"].setScale(8);
+        this.upgradeUI["upgradeAnimationRight"].setScale(8);
+        this.upgradeUI["upgradeAnimationLeft2"].setScale(4);
+        this.upgradeUI["upgradeAnimationCenter2"].setScale(4);
+        this.upgradeUI["upgradeAnimationRight2"].setScale(4);
+
+        // TEST CODE:
+        this.gameScene.player.exp = 4;
+        //
 
         for (let UIObject in this.upgradeUI) {
             this.upgradeUI[UIObject].setVisible(false);
@@ -83,7 +101,7 @@ class UI extends Phaser.Scene {
             this.gameScene.win();
         }
         let t = Phaser.Math.RoundTo(this.timer / 1000);
-        this.timerText.text = "00" + ":" + "0" + Phaser.Math.FloorTo(t / 60) + ":" + (t < 10 ? "0" : "") + t % 60;
+        this.timerText.text = "00" + ":" + "0" + Phaser.Math.FloorTo(t / 60) + ":" + (t % 60 < 10 ? "0" : "") + t % 60;
     }
 
     // Set text for upgrade like this: this.setUpgradeText("Center", "Body", "This was changed recently! OH GOD!\n\n+100 Pogs\n+1 Pogchamps")
@@ -103,7 +121,18 @@ class UI extends Phaser.Scene {
         this.scene.pause("battleScene");
         for (let UIObject in this.upgradeUI) {
             this.upgradeUI[UIObject].setVisible(true);
-            this.upgradeUI[UIObject].setActive(false);
+            this.upgradeUI[UIObject].setActive(true);
         }
+        this.upgradeUI["upgradeAnimationLeft"].play("level_up");
+        this.upgradeUI["upgradeAnimationCenter"].play("level_up");
+        this.upgradeUI["upgradeAnimationRight"].play("level_up");
+        this.upgradeUI["upgradeAnimationLeft2"].play("level_up_2");
+        this.upgradeUI["upgradeAnimationCenter2"].play("level_up_2");
+        this.upgradeUI["upgradeAnimationRight2"].play("level_up_2");
+
+        // Play level up sound
+        this.levelUpSFX = this.sound.add('pingSound'); // TO DO: upload new sound
+        this.levelUpSFX.setVolume(0.1);
+        this.levelUpSFX.play();
     }
 }
