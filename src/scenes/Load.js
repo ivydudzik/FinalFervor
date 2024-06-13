@@ -21,6 +21,8 @@ class Load extends Phaser.Scene {
 
         this.load.image("grass", "Grass.png");
 
+        this.load.spritesheet("vfx", "vfxSpritesheet.png", { frameWidth: 64, frameHeight: 64 });
+
         this.load.setPath("./assets/art/ui");
         this.load.image("upgradePanel", "Upgrade Panel.png");
         this.load.image("upgradeTitleRibbon", "Upgrade Title Ribbon.png");
@@ -32,6 +34,13 @@ class Load extends Phaser.Scene {
         music.setVolume(0.025);
         music.setLoop(true);
         music.play();
+
+        this.anims.create({
+            key: "dash",
+            frameRate: 60,
+            frames: this.anims.generateFrameNumbers("vfx", { start: 174, end: 189 }),
+            repeat: 0
+        });
 
         // Start game after loading
         this.scene.start("menuScene");
