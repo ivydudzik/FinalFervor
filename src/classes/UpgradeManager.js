@@ -197,7 +197,7 @@ class UpgradeManager {
                 break;
             }
             case "piercingUpgrade": {
-
+                this.player.piercingArrows = true;
                 break;
             } // unimplimented
             case "multishotUpgrade": {

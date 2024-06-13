@@ -191,12 +191,20 @@ class Battle extends Phaser.Scene {
 
     addEnemyBulletCollision(collidingEnemy, collidingBulletGroup) {
         this.physics.add.overlap(collidingEnemy, collidingBulletGroup, (enemy, bullet) => {
+            // If player has piercing, don't destroy the bullet
+            if (this.player.piercingArrows) {
+                // If already pierced enemy 
+                if (bullet.enemiesHit.indexOf(enemy) != -1) { console.log("already hit this enemy"); return; }
+                // otherwise
+                else { bullet.enemiesHit.push(enemy); }
+            } else {
+                bullet.onCollision();
+            }
             console.log("bullet collision");
             // for visual on impact
             // const { x, y } = bullet.body.center;
 
             enemy.takeDamage(this.player.arrowDamage);
-            bullet.onCollision();
 
             if (enemy.health <= 0) {
                 // enemy.body.checkCollision.none = true;
