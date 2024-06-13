@@ -205,7 +205,7 @@ class UpgradeManager {
                 break;
             } // unimplimented
             case "burstUpgrade": {
-
+                this.player.explosiveArrows = true;
                 break;
             } // unimplimented
         }

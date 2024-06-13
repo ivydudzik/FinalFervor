@@ -14,6 +14,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Legendary Upgrade Stats
         this.piercingArrows = false;
+        this.explosiveArrows = false;
 
         // Static Stats
         this.dashSpeedModifier = 10;

@@ -200,17 +200,35 @@ class Battle extends Phaser.Scene {
             } else {
                 bullet.onCollision();
             }
+
             console.log("bullet collision");
-            // for visual on impact
-            // const { x, y } = bullet.body.center;
+            // Collision coordinates
+            const { x, y } = bullet.body.center;
 
             enemy.takeDamage(this.player.arrowDamage);
-
             if (enemy.health <= 0) {
                 // enemy.body.checkCollision.none = true;
                 // enemy.setActive(false);
                 // enemy.setVisible(false);
                 enemy.destroy();
+                // If player has explosive arrows, burst into more arrows
+                if (this.player.explosiveArrows) {
+                    // Fire Arrows
+                    for (let fireAngle = 0; fireAngle <= Phaser.Math.PI2; fireAngle += Phaser.Math.PI2 / 8) {
+                        let fireVector = Phaser.Math.Vector2.UP;
+                        fireVector.setAngle(fireAngle);
+                        let explosionBullet = this.bulletGroup.fire(x, y, fireVector.x * this.player.arrowSpeed, fireVector.y * this.player.arrowSpeed, this.player.arrowLifetime);
+                        // Destine each arrow for death
+                        if (explosionBullet) {
+                            explosionBullet.scale = this.player.arrowSize;
+                            explosionBullet.deathEvent = this.time.addEvent({
+                                delay: this.player.arrowLifetime, // in ms
+                                callback: explosionBullet.onExpire,
+                                callbackScope: explosionBullet,
+                            });
+                        }
+                    }
+                }
             }
         });
     }
