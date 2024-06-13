@@ -36,8 +36,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         console.log("enemy took " + damage + " damage!")
         this.health -= damage;
 
-        if (this.health <= 0)
-        {
+        if (this.health <= 0) {
             this.visible = false;
             this.scene.physics.world.disable(this);
             this.deathvfx.visible = true;
