@@ -11,6 +11,7 @@ class Load extends Phaser.Scene {
         this.load.audio('enemyDeath1', 'pop1.mp3');
         this.load.audio('enemyDeath2', 'pop2.mp3');
         this.load.audio('enemyDeath3', 'pop3.mp3');
+        this.load.audio('levelUp', 'levelUP.mp3');
 
 
         this.load.setPath("./assets/art");
