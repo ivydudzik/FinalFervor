@@ -3,6 +3,14 @@ class EnemyManager {
         this.scene = scene;
         this.player = player;
 
+        this.enemyGroup = new Phaser.Physics.Arcade.Group(this.scene.physics.world, scene);
+
+        // add enemy collision to the enemyGroup
+        this.scene.physics.world.addCollider(this.enemyGroup, this.enemyGroup);
+
+        this.totalEnemiesID = 0;
+        this.enemies = [];
+
         this.waveID = 1;
 
         // create the waves
@@ -59,13 +67,14 @@ class EnemyManager {
 
     spawnEnemy(enemyType) {
         // console.log(this.enemyTypes);
-        this.enemy = new Enemy(this.scene, this.player, game.config.width / 2 + Phaser.Math.Between(-50, 50), game.config.height / 2 + 50 + Phaser.Math.Between(-50, 50), this.enemyTypes[enemyType].image, null, this.enemyTypes[enemyType].health, this.enemyTypes[enemyType].speed, this.enemyTypes[enemyType].damage);
+        this.enemies[this.totalEnemiesID] = new Enemy(this.scene, this.player, game.config.width / 2 + Phaser.Math.Between(-50, 50), game.config.height / 2 + 50 + Phaser.Math.Between(-50, 50), this.enemyTypes[enemyType].image, null, this.enemyTypes[enemyType].health, this.enemyTypes[enemyType].speed, this.enemyTypes[enemyType].damage);
+
+        this.enemyGroup.add(this.enemies[this.totalEnemiesID]);
 
         // Enemy x Player Bullet Collision
-        this.scene.addEnemyBulletCollision(this.enemy, this.scene.bulletGroup);
-    }
-
-    update() {
+        this.scene.addEnemyBulletCollision(this.enemies[this.totalEnemiesID], this.scene.bulletGroup);
         
+        // iterate the total num enemies
+        this.totalEnemiesID++;
     }
 }

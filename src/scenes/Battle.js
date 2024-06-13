@@ -10,6 +10,9 @@ class Battle extends Phaser.Scene {
     create() {
         this.init();
 
+        // set the fps
+        this.physics.world.setFPS(120);
+
         // Create UI
         this.scene.run("UIScene");
         this.UIScene = this.scene.get('UIScene');
@@ -36,7 +39,7 @@ class Battle extends Phaser.Scene {
         this.enemyManager = new EnemyManager(this, this.player);
 
         // Creat temp enemy
-        this.testEnemy = new Enemy(this, this.player, game.config.width / 2, game.config.height / 2 + 50, "furDevilSprite", null, 3, 50, 1);
+        //this.testEnemy = new Enemy(this, this.player, game.config.width / 2, game.config.height / 2 + 50, "furDevilSprite", null, 3, 50, 1);
 
         // Create Player Bullets
         this.bulletGroup = this.add.existing(
@@ -52,7 +55,7 @@ class Battle extends Phaser.Scene {
         });
 
         // Enemy x Player Bullet Collision
-        this.addEnemyBulletCollision(this.testEnemy, this.bulletGroup);
+        // this.addEnemyBulletCollision(this.testEnemy, this.bulletGroup);
 
         // Create Upgrade Manager
         this.upgradeManager = new UpgradeManager(this, this.UIScene, this.player);
