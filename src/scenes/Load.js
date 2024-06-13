@@ -8,6 +8,10 @@ class Load extends Phaser.Scene {
         this.load.audio('theme', '641926__kbrecordzz__scifi-1-1.mp3');
         // scifi (1) (1).mp3 by kbrecordzz -- https://freesound.org/s/641926/ -- License: Creative Commons 0
         this.load.audio('pingSound', 'Switch.wav');
+        this.load.audio('enemyDeath1', 'pop1.mp3');
+        this.load.audio('enemyDeath2', 'pop2.mp3');
+        this.load.audio('enemyDeath3', 'pop3.mp3');
+
 
         this.load.setPath("./assets/art");
         this.load.image("playerSprite", "Player.png");
