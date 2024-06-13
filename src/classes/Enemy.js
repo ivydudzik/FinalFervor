@@ -39,6 +39,12 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         if (this.health <= 0) {
             this.visible = false;
             this.scene.physics.world.disable(this);
+            // Play death sound
+            let ran_val = Phaser.Utils.Array.GetRandom([1, 2, 3]);
+            console.log("ran_val: " + ran_val);
+            this.deathSound = this.scene.sound.add('enemyDeath' + ran_val);
+            this.deathSound.setVolume(0.1);
+            this.deathSound.play();
             this.deathvfx.visible = true;
             this.deathvfx.play("enemy_death");
         }
