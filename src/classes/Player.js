@@ -1,6 +1,10 @@
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame, health) {
         super(scene, x, y, texture, frame);
+        // Level Tracking
+        this.level = 0;
+        this.exp = 0;
+
         // Common Upgrade Stats
         this.health = health;
         this.speed = 75;
