@@ -20,12 +20,34 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
+        //vfx
+        this.deathvfx = scene.add.sprite(this.body.position.x, this.body.position.y, "enemy_death");
+        this.deathvfx.setScale(0.5);
+        this.deathvfx.visible = false;
+
+        this.deathvfx.on("animationcomplete", () => {
+            this.destroy();
+        });
+
         return this;
     }
 
     takeDamage(damage) {
         console.log("enemy took " + damage + " damage!")
         this.health -= damage;
+
+        if (this.health <= 0) {
+            this.visible = false;
+            this.scene.physics.world.disable(this);
+            // Play death sound
+            let ran_val = Phaser.Utils.Array.GetRandom([1, 2, 3]);
+            console.log("ran_val: " + ran_val);
+            this.deathSound = this.scene.sound.add('enemyDeath' + ran_val);
+            this.deathSound.setVolume(0.1);
+            this.deathSound.play();
+            this.deathvfx.visible = true;
+            this.deathvfx.play("enemy_death");
+        }
     }
 
     dealDamage() {
@@ -58,6 +80,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.body.velocity.y *= this.speed;
 
         this.attackCooldown--;
+
+        this.deathvfx.x = this.body.position.x + 7;
+        this.deathvfx.y = this.body.position.y + 6;
     }
 
 }

@@ -68,6 +68,16 @@ class Battle extends Phaser.Scene {
         this.createRestartToggleKey('keydown-R');
         this.createDebugToggleKey('keydown-D');
 
+        this.dashVFX = this.add.sprite(this.player.x, this.player.y, "vfx");
+        this.dashVFX.setScale(0.5);
+        this.dashVFX.visible = false;
+
+        this.dashVFX.on("animationcomplete", () => {
+            this.dashVFX.visible = false;
+        });
+
+        this.facingRight = -1;
+
         // Make bullets start fire on mouseclick
         this.input.on('pointerdown', () => {
             if (!this.player.isWaitingToFire) {
@@ -114,6 +124,9 @@ class Battle extends Phaser.Scene {
                 this.player.currentDashCharges -= 1;
                 this.player.isDashing = true;
                 console.log("dashing!");
+
+                this.dashVFX.visible = true;
+                this.dashVFX.play("dash");
                 // Stop dash after dash length
                 this.time.delayedCall(this.player.dashLength, () => {
                     this.player.isDashing = false;
@@ -153,6 +166,21 @@ class Battle extends Phaser.Scene {
     update(_time, delta) {
         this.player.update();
         //this.enemyManager.update();
+
+        if (this.player.cursors.left.isDown) {
+            this.facingRight = 1;
+            //this.player.setFlipX(true);
+            this.dashVFX.setFlipX(true);
+        }
+        else if (this.player.cursors.right.isDown) {
+            this.facingRight = -1;
+            //this.player.setFlipX(false);
+            this.dashVFX.setFlipX(false);
+        }
+
+        this.dashVFX.x = this.player.x + (16 * this.facingRight);
+        this.dashVFX.y = this.player.y + 7;
+
         this.timer += delta;
         if (this.timer >= 300 * 1000) {
             this.win();
@@ -220,7 +248,8 @@ class Battle extends Phaser.Scene {
 
             if (enemy.health <= 0) {
                 this.givePlayerEXP(enemy.expValue);
-                enemy.destroy();
+                //enemy.destroy();
+
 
                 // If player has explosive arrows, burst into more arrows
                 if (this.player.explosiveArrows) {
@@ -240,6 +269,13 @@ class Battle extends Phaser.Scene {
                         }
                     }
                 }
+            }
+            else {
+                // play hit sound (instead of death sound)
+                // Play attack sound
+                this.hitSound = this.sound.add('hit');
+                this.hitSound.setVolume(0.5);
+                this.hitSound.play();
             }
         });
     }
