@@ -31,6 +31,7 @@ class Battle extends Phaser.Scene {
 
         // Create the main player sprite
         this.player = new Player(this, game.config.width / 2, game.config.height / 2, "playerSprite", null, 20);
+        this.player.body.collideWorldBounds = true;
 
         // Create Enemy Manager
         this.enemyManager = new EnemyManager(this, this.player);
@@ -139,6 +140,9 @@ class Battle extends Phaser.Scene {
                 }, [], this);
             }
         });
+
+        // 5 minute timer
+        this.timer = 0.0;
     }
 
     win() {
@@ -159,17 +163,16 @@ class Battle extends Phaser.Scene {
         this.scene.start("loseScene");
     }
 
-    update() {
+    update(_time, delta) {
         this.player.update();
         //this.enemyManager.update();
-        if (this.player.cursors.left.isDown)
-        {
+
+        if (this.player.cursors.left.isDown) {
             this.facingRight = 1;
             //this.player.setFlipX(true);
             this.dashVFX.setFlipX(true);
         }
-        else if (this.player.cursors.right.isDown)
-        {
+        else if (this.player.cursors.right.isDown) {
             this.facingRight = -1;
             //this.player.setFlipX(false);
             this.dashVFX.setFlipX(false);
@@ -177,6 +180,11 @@ class Battle extends Phaser.Scene {
 
         this.dashVFX.x = this.player.x + (16 * this.facingRight);
         this.dashVFX.y = this.player.y + 7;
+
+        this.timer += delta;
+        if (this.timer >= 300 * 1000) {
+            this.win();
+        }
     }
 
     playerFire() {
@@ -241,7 +249,7 @@ class Battle extends Phaser.Scene {
             if (enemy.health <= 0) {
                 this.givePlayerEXP(enemy.expValue);
                 //enemy.destroy();
-                
+
 
                 // If player has explosive arrows, burst into more arrows
                 if (this.player.explosiveArrows) {
