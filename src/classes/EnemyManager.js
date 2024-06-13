@@ -45,7 +45,7 @@ class EnemyManager {
 
     spawnWave() {
         if (this.waveTimer.delay == 3000) {
-            this.waveTimer.delay = 30000;
+            this.waveTimer.delay = 15000;
         }
 
         if (this.waveID <= 10) {
@@ -71,7 +71,7 @@ class EnemyManager {
         // console.log(this.enemyTypes);
         var offset1 = Phaser.Utils.Array.GetRandom([-1, 1]);
         var offset2 = Phaser.Utils.Array.GetRandom([-1, 1]);
-        this.enemies[this.totalEnemiesID] = new Enemy(this.scene, this.player, this.player.body.x + (Phaser.Math.Between(50, 150) * offset1), this.player.body.y + (Phaser.Math.Between(50, 150) * offset2), this.enemyTypes[enemyType].image, null, this.enemyTypes[enemyType].health, this.enemyTypes[enemyType].speed, this.enemyTypes[enemyType].damage);
+        this.enemies[this.totalEnemiesID] = new Enemy(this.scene, this.player, this.player.body.x + (Phaser.Math.Between(75, 150) * offset1), this.player.body.y + (Phaser.Math.Between(75, 150) * offset2), this.enemyTypes[enemyType].image, null, this.enemyTypes[enemyType].health, this.enemyTypes[enemyType].speed, this.enemyTypes[enemyType].damage);
 
         // add enemy to the group
         this.enemyGroup.add(this.enemies[this.totalEnemiesID]);
