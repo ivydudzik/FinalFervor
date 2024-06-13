@@ -3,6 +3,7 @@ class Bullet extends Phaser.Physics.Arcade.Sprite {
         this.enableBody(true, x, y, true, true);
         this.setVelocity(vx, vy);
         this.setRotation(this.body.velocity.angle() + Phaser.Math.PI2 / 4);
+        this.enemiesHit = [];
         // Will be set by battle scene:
         this.deathEvent = null;
     }

@@ -12,7 +12,6 @@ let config = {
     render: {
         pixelArt: true,
         antialias: false,
-
     },
     physics: {
         default: 'arcade',

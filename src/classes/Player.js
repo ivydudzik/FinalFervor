@@ -1,21 +1,36 @@
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame, health) {
         super(scene, x, y, texture, frame);
-
-        // Stats
+        // Common Upgrade Stats
         this.health = health;
         this.speed = 75;
         this.fireDelay = 500;
         this.arrowSpeed = 250;
         this.arrowLifetime = 500;
         this.arrowDamage = 1;
-        this.arrowSize = 1; // TO DO
-        this.dashCooldown = 1500; // TO DO
-        this.dashCharges = 1; // TO DO
+        this.arrowSize = 0.75;
+        this.dashCooldown = 1500;
+        this.dashCharges = 1;
+
+        // Legendary Upgrade Stats
+        this.piercingArrows = false;
+        this.explosiveArrows = false;
+        this.explosionArrowCount;
+        this.multishot = false
+        this.arrowCount = 1;
+        this.arrowSpread;
+
+        // Static Stats
+        this.dashSpeedModifier = 10;
+        this.dashLength = 100;
 
         // State tracking to allow continuous shooting
         this.isWaitingToFire = false;
         this.lastFiredAt = 0;
+
+        // State tracking for dash
+        this.currentDashCharges = this.dashCharges;
+        this.isDashing = false;
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -33,6 +48,14 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         else {
             this.scene.lose();
         }
+    }
+
+    startDash() {
+        this.speed *= this.dashSpeedModifier;
+    }
+
+    stopDash() {
+        this.speed /= this.dashSpeedModifier;
     }
 
     update() {
