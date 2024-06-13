@@ -20,12 +20,28 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
+        //vfx
+        this.deathvfx = scene.add.sprite(this.body.position.x, this.body.position.y, "enemy_death");
+        this.deathvfx.setScale(0.5);
+        this.deathvfx.visible = false;
+
+        this.deathvfx.on("animationcomplete", () => {
+            this.destroy();
+        });
+
         return this;
     }
 
     takeDamage(damage) {
         console.log("enemy took " + damage + " damage!")
         this.health -= damage;
+
+        if (this.health <= 0)
+        {
+            this.visible = false;
+            this.deathvfx.visible = true;
+            this.deathvfx.play("enemy_death");
+        }
     }
 
     dealDamage() {
@@ -58,6 +74,9 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.body.velocity.y *= this.speed;
 
         this.attackCooldown--;
+
+        this.deathvfx.x = this.body.position.x + 7;
+        this.deathvfx.y = this.body.position.y + 6;
     }
 
 }

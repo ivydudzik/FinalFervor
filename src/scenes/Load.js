@@ -45,7 +45,7 @@ class Load extends Phaser.Scene {
         this.anims.create({
             key: "enemy_death",
             frameRate: 60,
-            frames: this.anims.generateFrameNumbers("vfx", { start: 190, end: 105 }),
+            frames: this.anims.generateFrameNumbers("vfx", { start: 190, end: 205 }),
             repeat: 0
         });
 

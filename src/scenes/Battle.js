@@ -240,7 +240,7 @@ class Battle extends Phaser.Scene {
 
             if (enemy.health <= 0) {
                 this.givePlayerEXP(enemy.expValue);
-                enemy.destroy();
+                //enemy.destroy();
                 
 
                 // If player has explosive arrows, burst into more arrows
