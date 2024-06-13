@@ -1,4 +1,4 @@
-# Final Fervour
+# Final Fervor
 A little roguelike
 
 
