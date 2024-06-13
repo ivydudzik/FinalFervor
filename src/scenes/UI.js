@@ -39,7 +39,10 @@ class UI extends Phaser.Scene {
         this.upgradeUI["upgradePanelCenter"].on("pointerdown", () => { this.gameScene.upgradeManager.chooseUpgrade("Center"); }, this);
         this.upgradeUI["upgradePanelRight"].on("pointerdown", () => { this.gameScene.upgradeManager.chooseUpgrade("Right"); }, this);
 
-        this.hideUpgradeUI();
+        for (let UIObject in this.upgradeUI) {
+            this.upgradeUI[UIObject].setVisible(false);
+            this.upgradeUI[UIObject].setActive(false);
+        }
         // this.setUpgradeText("Center", "Body", "This was changed recently! OH GOD!\n\n+100 Pogs\n+1 Pogchamps")
         // this.showUpgradeUI();
     }
@@ -54,6 +57,7 @@ class UI extends Phaser.Scene {
     }
 
     hideUpgradeUI() {
+        this.scene.run("battleScene");
         for (let UIObject in this.upgradeUI) {
             this.upgradeUI[UIObject].setVisible(false);
             this.upgradeUI[UIObject].setActive(false);
@@ -61,6 +65,7 @@ class UI extends Phaser.Scene {
     }
 
     showUpgradeUI() {
+        this.scene.pause("battleScene");
         for (let UIObject in this.upgradeUI) {
             this.upgradeUI[UIObject].setVisible(true);
             this.upgradeUI[UIObject].setActive(false);

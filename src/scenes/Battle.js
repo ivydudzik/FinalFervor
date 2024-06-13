@@ -251,8 +251,7 @@ class Battle extends Phaser.Scene {
         });
     }
 
-    addPlayerEnemyCollision(player, enemyGroup)
-    {
+    addPlayerEnemyCollision(player, enemyGroup) {
         this.physics.add.overlap(player, enemyGroup, (player, enemy) => {
             console.log("enemy hit player");
             enemy.dealDamage();
