@@ -39,6 +39,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         if (this.health <= 0)
         {
             this.visible = false;
+            this.scene.physics.world.disable(this);
             this.deathvfx.visible = true;
             this.deathvfx.play("enemy_death");
         }
