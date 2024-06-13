@@ -262,6 +262,13 @@ class Battle extends Phaser.Scene {
                     }
                 }
             }
+            else {
+                // play hit sound (instead of death sound)
+                // Play attack sound
+                this.hitSound = this.sound.add('hit');
+                this.hitSound.setVolume(0.5);
+                this.hitSound.play();
+            }
         });
     }
 

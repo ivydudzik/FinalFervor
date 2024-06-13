@@ -131,7 +131,7 @@ class UI extends Phaser.Scene {
         this.upgradeUI["upgradeAnimationRight2"].play("level_up_2");
 
         // Play level up sound
-        this.levelUpSFX = this.sound.add('pingSound'); // TO DO: upload new sound
+        this.levelUpSFX = this.sound.add('levelUp');
         this.levelUpSFX.setVolume(0.1);
         this.levelUpSFX.play();
     }

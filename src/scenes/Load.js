@@ -12,6 +12,7 @@ class Load extends Phaser.Scene {
         this.load.audio('enemyDeath2', 'pop2.mp3');
         this.load.audio('enemyDeath3', 'pop3.mp3');
         this.load.audio('levelUp', 'levelUP.mp3');
+        this.load.audio('hit', 'hitsound.mp3');
 
 
         this.load.setPath("./assets/art");
@@ -50,7 +51,7 @@ class Load extends Phaser.Scene {
         this.anims.create({
             key: "level_up",
             frameRate: 24,
-            frames: this.anims.generateFrameNumbers("vfx", { start: 304, end: 320 }),
+            frames: this.anims.generateFrameNumbers("vfx", { start: 304, end: 319 }),
             repeat: 0
         });
 
