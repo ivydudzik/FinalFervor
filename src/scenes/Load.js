@@ -14,6 +14,9 @@ class Load extends Phaser.Scene {
         this.load.image("furDevilSprite", "Fur Devil.png");
         this.load.image("bushlingSprite", "Bushling.png");
         this.load.image("stingFlySprite", "StingFly.png");
+        this.load.image("furDevilSpriteElite", "Fur Devil Elite.png");
+        this.load.image("bushlingSpriteElite", "Bushling Elite.png");
+        this.load.image("stingFlySpriteElite", "StingFly Elite.png");
         this.load.image("arrow", "Arrow.png");
 
         this.load.image("grass", "Grass.png");

@@ -32,11 +32,11 @@ class Battle extends Phaser.Scene {
         // Create the main player sprite
         this.player = new Player(this, game.config.width / 2, game.config.height / 2, "playerSprite", null, 20);
 
-        // Creat temp enemy
-        this.testEnemy = new Enemy(this, game.config.width / 2, game.config.height / 2 + 50, "furDevilSprite", null, 3);
-
         // Create Enemy Manager
-        this.enemyManager = new EnemyManager(this);
+        this.enemyManager = new EnemyManager(this, this.player);
+
+        // Creat temp enemy
+        //this.testEnemy = new Enemy(this, this.player, game.config.width / 2, game.config.height / 2 + 50, "furDevilSprite", null, 3, 50, 1);
 
         // Create Player Bullets
         this.bulletGroup = this.add.existing(
@@ -52,7 +52,7 @@ class Battle extends Phaser.Scene {
         });
 
         // Enemy x Player Bullet Collision
-        this.addEnemyBulletCollision(this.testEnemy, this.bulletGroup);
+        // this.addEnemyBulletCollision(this.testEnemy, this.bulletGroup);
 
         // Create Upgrade Manager
         this.upgradeManager = new UpgradeManager(this, this.UIScene, this.player);
@@ -161,6 +161,7 @@ class Battle extends Phaser.Scene {
 
     update() {
         this.player.update();
+        //this.enemyManager.update();
     }
 
     playerFire() {
@@ -247,6 +248,14 @@ class Battle extends Phaser.Scene {
                     }
                 }
             }
+        });
+    }
+
+    addPlayerEnemyCollision(player, enemyGroup)
+    {
+        this.physics.add.overlap(player, enemyGroup, (player, enemy) => {
+            console.log("enemy hit player");
+            enemy.dealDamage();
         });
     }
 
