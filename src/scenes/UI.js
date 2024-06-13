@@ -19,6 +19,13 @@ class UI extends Phaser.Scene {
         // Timer Text
         this.timerText = this.add.text(game.config.width - 5, 0, 0, { fontSize: '36px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#FFFFFF" });
         this.timerText.setOrigin(1, 0);
+        // Menu Button Text
+        this.menuText = this.add.text(game.config.width / 2, 20, 'Menu', { fill: '#6AC965', fontSize: '36px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+        this.menuText.setOrigin(0.50, 0.50);
+        this.menuText.setInteractive();
+        this.menuText.on('pointerover', () => { this.menuText.setFill('#85E740'); });
+        this.menuText.on('pointerout', () => { this.menuText.setFill('#6AC965'); });
+        this.menuText.on('pointerdown', () => { this.menuScene(); });
 
         // 5 minute timer
         this.timer = 0.0;
@@ -58,6 +65,11 @@ class UI extends Phaser.Scene {
         }
         // this.setUpgradeText("Center", "Body", "This was changed recently! OH GOD!\n\n+100 Pogs\n+1 Pogchamps")
         // this.showUpgradeUI();
+    }
+
+    menuScene() {
+        this.scene.stop("battleScene");
+        this.scene.start("menuScene");
     }
 
     update(_time, delta) {
