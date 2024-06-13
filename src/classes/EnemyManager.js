@@ -58,7 +58,7 @@ class EnemyManager {
             this.waveTimer.delay = 15000;
         }
 
-        if (this.waveID <= 10) {
+        if (this.waveID <= 20) {
             console.log("spawned wave " + this.waveID);
             // find the current wave
             let current_wave = this.waves["wave_" + this.waveID];
