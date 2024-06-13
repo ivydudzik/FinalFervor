@@ -53,7 +53,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityY(1);
         }
 
-        this.body.velocity.normalize()
+        this.body.velocity.normalize();
 
         this.body.velocity.x *= this.speed;
         this.body.velocity.y *= this.speed;
