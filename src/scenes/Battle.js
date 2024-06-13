@@ -123,6 +123,7 @@ class Battle extends Phaser.Scene {
                 this.player.currentDashCharges -= 1;
                 this.player.isDashing = true;
                 console.log("dashing!");
+
                 this.dashVFX.visible = true;
                 this.dashVFX.play("dash");
                 // Stop dash after dash length
@@ -255,6 +256,7 @@ class Battle extends Phaser.Scene {
                 // enemy.setActive(false);
                 // enemy.setVisible(false);
                 enemy.destroy();
+                
 
                 // If player has explosive arrows, burst into more arrows
                 if (this.player.explosiveArrows) {

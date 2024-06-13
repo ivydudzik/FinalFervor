@@ -42,6 +42,13 @@ class Load extends Phaser.Scene {
             repeat: 0
         });
 
+        this.anims.create({
+            key: "enemy_death",
+            frameRate: 60,
+            frames: this.anims.generateFrameNumbers("vfx", { start: 190, end: 105 }),
+            repeat: 0
+        });
+
         // Start game after loading
         this.scene.start("menuScene");
     }
