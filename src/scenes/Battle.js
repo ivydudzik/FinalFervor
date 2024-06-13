@@ -18,7 +18,7 @@ class Battle extends Phaser.Scene {
         cursors = this.input.keyboard.createCursorKeys();
 
         // Add Descriptive Text
-        document.getElementById('description').innerHTML = '<h3>ARROW KEYS to move // MOUSE to aim // MOUSE LEFT to shoot </h3>'
+        document.getElementById('description').innerHTML = '<h3>ARROW KEYS to move // MOUSE to aim // MOUSE LEFT to shoot // CTRL to dash </h3>'
 
         // Set map bounds
         this.physics.world.setBounds(0, 0, game.config.width, game.config.height);
