@@ -1,11 +1,9 @@
 class Enemy extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, player, x, y, texture, frame, health, speed, damage, elite) {
+    constructor(scene, player, x, y, texture, frame, health, speed, damage) {
         super(scene, x, y, texture, frame);
 
         this.scene = scene;
         this.player = player;
-        this.elite = elite;
-        this.texture = texture;
 
         this.playerBufferZone = 10;
         this.playerOffset = 8;
@@ -14,10 +12,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.health = health;
         this.speed = speed;
         this.damage = damage;
-        if (elite > 0)
-        {
-            this.damage = damage + damage;
-        }
         this.attackCooldown = 0;
         this.cooldownTime = 2 * 144; // left # in seconds
 
