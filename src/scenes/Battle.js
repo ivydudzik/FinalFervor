@@ -31,6 +31,7 @@ class Battle extends Phaser.Scene {
 
         // Create the main player sprite
         this.player = new Player(this, game.config.width / 2, game.config.height / 2, "playerSprite", null, 20);
+        this.player.body.collideWorldBounds = true;
 
         // Create Enemy Manager
         this.enemyManager = new EnemyManager(this, this.player);
@@ -126,6 +127,9 @@ class Battle extends Phaser.Scene {
                 }, [], this);
             }
         });
+
+        // 5 minute timer
+        this.timer = 0.0;
     }
 
     win() {
@@ -146,9 +150,13 @@ class Battle extends Phaser.Scene {
         this.scene.start("loseScene");
     }
 
-    update() {
+    update(_time, delta) {
         this.player.update();
         //this.enemyManager.update();
+        this.timer += delta;
+        if (this.timer >= 300 * 1000) {
+            this.win();
+        }
     }
 
     playerFire() {

@@ -20,15 +20,12 @@ class UI extends Phaser.Scene {
         this.timerText = this.add.text(game.config.width - 5, 0, 0, { fontSize: '36px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#FFFFFF" });
         this.timerText.setOrigin(1, 0);
         // Menu Button Text
-        this.menuText = this.add.text(game.config.width / 2, 20, 'Menu', { fill: '#6AC965', fontSize: '36px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+        this.menuText = this.add.text(game.config.width / 2, 20, 'MENU', { fill: '#6AC965', fontSize: '36px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
         this.menuText.setOrigin(0.50, 0.50);
         this.menuText.setInteractive();
         this.menuText.on('pointerover', () => { this.menuText.setFill('#85E740'); });
         this.menuText.on('pointerout', () => { this.menuText.setFill('#6AC965'); });
         this.menuText.on('pointerdown', () => { this.menuScene(); });
-
-        // 5 minute timer
-        this.timer = 0.0;
 
         // Upgrade UI, Changing Text Names May Break this.setUpgradeText()
         this.upgradeUI = {
@@ -78,12 +75,9 @@ class UI extends Phaser.Scene {
         this.levelText.text = "LVL: " + this.gameScene.player.level;
 
         // Timer Logic
-        this.timer += delta;
-        if (this.timer >= 300 * 1000) {
-            this.gameScene.win();
-        }
-        let t = Phaser.Math.RoundTo(this.timer / 1000);
-        this.timerText.text = "00" + ":" + "0" + Phaser.Math.FloorTo(t / 60) + ":" + (t < 10 ? "0" : "") + t % 60;
+        let t = Phaser.Math.RoundTo(this.gameScene.timer / 1000);
+        let gt = (300 - t);
+        this.timerText.text = "00" + ":" + "0" + Phaser.Math.FloorTo(gt / 60) + ":" + ((gt % 60) < 10 ? "0" : "") + gt % 60;
     }
 
     // Set text for upgrade like this: this.setUpgradeText("Center", "Body", "This was changed recently! OH GOD!\n\n+100 Pogs\n+1 Pogchamps")

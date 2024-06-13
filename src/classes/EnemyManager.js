@@ -26,7 +26,17 @@ class EnemyManager {
             "wave_7": { "numEnemy_1": 0, "numEnemy_2": 15, "numEnemy_3": 5 },
             "wave_8": { "numEnemy_1": 10, "numEnemy_2": 10, "numEnemy_3": 10 },
             "wave_9": { "numEnemy_1": 10, "numEnemy_2": 15, "numEnemy_3": 15 },
-            "wave_10": { "numEnemy_1": 15, "numEnemy_2": 20, "numEnemy_3": 15 }
+            "wave_10": { "numEnemy_1": 15, "numEnemy_2": 20, "numEnemy_3": 15 },
+            "wave_11": { "numEnemy_1": 15, "numEnemy_2": 20, "numEnemy_3": 15 },
+            "wave_12": { "numEnemy_1": 15, "numEnemy_2": 20, "numEnemy_3": 20 },
+            "wave_13": { "numEnemy_1": 15, "numEnemy_2": 25, "numEnemy_3": 20 },
+            "wave_14": { "numEnemy_1": 20, "numEnemy_2": 25, "numEnemy_3": 20 },
+            "wave_15": { "numEnemy_1": 20, "numEnemy_2": 25, "numEnemy_3": 30 },
+            "wave_16": { "numEnemy_1": 20, "numEnemy_2": 25, "numEnemy_3": 30 },
+            "wave_17": { "numEnemy_1": 20, "numEnemy_2": 35, "numEnemy_3": 30 },
+            "wave_18": { "numEnemy_1": 20, "numEnemy_2": 35, "numEnemy_3": 30 },
+            "wave_19": { "numEnemy_1": 20, "numEnemy_2": 35, "numEnemy_3": 40 },
+            "wave_20": { "numEnemy_1": 20, "numEnemy_2": 35, "numEnemy_3": 40 },
         }
 
         this.enemyTypes = {
