@@ -163,10 +163,6 @@ class Battle extends Phaser.Scene {
         this.player.update();
     }
 
-    playerDash() {
-
-    }
-
     playerFire() {
         this.player.lastFiredAt = this.time.now;
         // Play attack sound
@@ -176,16 +172,35 @@ class Battle extends Phaser.Scene {
         // Calculate Arrow Angle
         let pointerInCameraSpace = this.input.activePointer.positionToCamera(this.cameras.main);
         let playerToMouse = new Phaser.Math.Vector2(pointerInCameraSpace.x - this.player.body.position.x - (this.player.width / 2), pointerInCameraSpace.y - this.player.body.position.y - (this.player.height / 2)).normalize();
-        // Fire Arrow
-        let bullet = this.bulletGroup.fire(this.player.x, this.player.y, playerToMouse.x * this.player.arrowSpeed, playerToMouse.y * this.player.arrowSpeed, this.player.arrowLifetime);
-        // Destine each arrow for death
-        if (bullet) {
-            bullet.scale = this.player.arrowSize;
-            bullet.deathEvent = this.time.addEvent({
-                delay: this.player.arrowLifetime, // in ms
-                callback: bullet.onExpire,
-                callbackScope: bullet,
-            });
+        // Fire only one arrow unless player has multishot
+        if (!this.player.multishot) {
+            // Fire Arrow
+            let bullet = this.bulletGroup.fire(this.player.x, this.player.y, playerToMouse.x * this.player.arrowSpeed, playerToMouse.y * this.player.arrowSpeed, this.player.arrowLifetime);
+            // Destine each arrow for death
+            if (bullet) {
+                bullet.scale = this.player.arrowSize;
+                bullet.deathEvent = this.time.addEvent({
+                    delay: this.player.arrowLifetime, // in ms
+                    callback: bullet.onExpire,
+                    callbackScope: bullet,
+                });
+            }
+        } else {
+            for (let fireAngle = -this.player.arrowSpread / 2; fireAngle <= this.player.arrowSpread / 2; fireAngle += this.player.arrowSpread / (this.player.arrowCount - 1)) {
+                // Fire Arrow
+                let fireVector = Phaser.Math.Vector2.RIGHT;
+                fireVector.setAngle(fireAngle + playerToMouse.angle());
+                let bullet = this.bulletGroup.fire(this.player.x, this.player.y, fireVector.x * this.player.arrowSpeed, fireVector.y * this.player.arrowSpeed, this.player.arrowLifetime);
+                // Destine each arrow for death
+                if (bullet) {
+                    bullet.scale = this.player.arrowSize;
+                    bullet.deathEvent = this.time.addEvent({
+                        delay: this.player.arrowLifetime, // in ms
+                        callback: bullet.onExpire,
+                        callbackScope: bullet,
+                    });
+                }
+            }
         }
     }
 
@@ -206,11 +221,13 @@ class Battle extends Phaser.Scene {
             const { x, y } = bullet.body.center;
 
             enemy.takeDamage(this.player.arrowDamage);
+
             if (enemy.health <= 0) {
                 // enemy.body.checkCollision.none = true;
                 // enemy.setActive(false);
                 // enemy.setVisible(false);
                 enemy.destroy();
+
                 // If player has explosive arrows, burst into more arrows
                 if (this.player.explosiveArrows) {
                     // Fire Arrows

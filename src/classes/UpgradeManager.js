@@ -88,54 +88,52 @@ class UpgradeManager {
                 "Body": "You gain arrows that PIERCE FOES.\n\n+PIERCING ARROWS",
                 "count": 0, "maxCount": 1,
                 "prerequisite": "rangeUpgrade"
-            }, // unimplimented
+            },
             "multishotUpgrade": {
                 "upgradeName": "multishotUpgrade",
                 "Title": "Multishot Bow",
-                "Body": "You gain a MULTISHOT BOW. \n\n+300% ARROWS\n-50% DAMAGE",
+                "Body": "You gain a MULTISHOT BOW. \n\n+300% ARROWS\n-25% DAMAGE",
                 "count": 0, "maxCount": 2,
                 "prerequisite": "attackRateUpgrade",
-                "shotSpread": Phaser.Math.PI2 / 4, "shotCountMultiplier": 3, "damageMultiplier": 0.5
-            }, // unimplimented
+                "shotSpread": Phaser.Math.PI2 / 8, "shotCountMultiplier": 3, "damageMultiplier": 0.75
+            },
             "burstUpgrade": {
                 "upgradeName": "burstUpgrade",
                 "Title": "Explosive Shot",
                 "Body": "You gain arrows that EXPLODE on contact with foes.\n\n+EXPLOSIVE ARROWS",
                 "count": 0, "maxCount": 1,
                 "prerequisite": "damageUpgrade",
-            }, // unimplimented
+                "burstCount": 8
+            },
         }
 
         return this;
     }
 
     levelUp() {
-        // TO DO: MAX COUNT CONSIDERATIONS
-
         // Randomize upgrades based on valid possibilities, never having two of the same upgrade showing
         let upgradePool = [...this.commonUpgradeNames];
 
-        // for upgrade in pool 
-        //     if upgrade count is greater/equal to upgrade max count, strike from pool
+        // Add legendary upgrades for which the player has prerequisites
+        for (let legendary of ["burstUpgrade", "multishotUpgrade", "piercingUpgrade"]) {
+            if (this.upgrades[this.upgrades[legendary].prerequisite].count >= 1) {
+                upgradePool.push(legendary)
+            }
+        }
 
-        // for let legendary of burstUpgrade, multishotUpgrade, piercingUpgrade
-        //     if upgrade[legendary.prerequisite].count >= 1 
-        //         add legendary to pool
+        // Remove upgrades with max counts
+        let culledUpgradePool = upgradePool.filter((upgrade) => { return this.upgrades[upgrade].count < this.upgrades[upgrade].maxCount; }, this)
 
-        let leftUpgrade = upgradePool.splice(Math.floor(Math.random() * upgradePool.length), 1);
-        let centerUpgrade = upgradePool.splice(Math.floor(Math.random() * upgradePool.length), 1);
-        let rightUpgrade = upgradePool.splice(Math.floor(Math.random() * upgradePool.length), 1);
+        // Pick 3 upgrades to display
+        let leftUpgrade = culledUpgradePool.splice(Math.floor(Math.random() * culledUpgradePool.length), 1);
+        let centerUpgrade = culledUpgradePool.splice(Math.floor(Math.random() * culledUpgradePool.length), 1);
+        let rightUpgrade = culledUpgradePool.splice(Math.floor(Math.random() * culledUpgradePool.length), 1);
 
-        // Pick 3
         this.upgradeChoices.Left = this.upgrades[leftUpgrade];
         this.upgradeChoices.Center = this.upgrades[centerUpgrade];
         this.upgradeChoices.Right = this.upgrades[rightUpgrade];
 
-        /// DEBUG LEGENDARIES
-        this.upgradeChoices.Left = this.upgrades.piercingUpgrade;
-        this.upgradeChoices.Center = this.upgrades.multishotUpgrade;
-        this.upgradeChoices.Right = this.upgrades.burstUpgrade;
-
+        // Set UI text to match
         for (let panel of ["Left", "Center", "Right"]) {
             this.UIScene.setUpgradeText(panel, "Body", this.upgradeChoices[panel].Body);
             this.UIScene.setUpgradeText(panel, "Title", this.upgradeChoices[panel].Title);
@@ -147,10 +145,11 @@ class UpgradeManager {
     chooseUpgrade(upgradeLocation) {
         console.log("Choosing " + upgradeLocation + " upgrade");
         this.upgradeChoices[upgradeLocation].count += 1;
-        // for (let upgrade in this.upgrades) {
-        //     console.log(upgrade);
-        //     console.log(this.upgrades[upgrade].count);
-        // }
+
+        for (let upgrade in this.upgrades) {
+            console.log(upgrade);
+            console.log(this.upgrades[upgrade].count);
+        }
 
         switch (this.upgradeChoices[upgradeLocation].upgradeName) {
             case "healthUpgrade": {
@@ -199,15 +198,19 @@ class UpgradeManager {
             case "piercingUpgrade": {
                 this.player.piercingArrows = true;
                 break;
-            } // unimplimented
+            }
             case "multishotUpgrade": {
-
+                this.player.multishot = true;
+                this.player.arrowDamage *= this.upgrades.multishotUpgrade.damageMultiplier;
+                this.player.arrowCount *= this.upgrades.multishotUpgrade.shotCountMultiplier;
+                this.player.arrowSpread = this.upgrades.multishotUpgrade.shotSpread;
                 break;
             } // unimplimented
             case "burstUpgrade": {
                 this.player.explosiveArrows = true;
+                this.player.explosionArrowCount = this.upgrades.burstUpgrade.burstCount;
                 break;
-            } // unimplimented
+            }
         }
 
         this.UIScene.hideUpgradeUI();

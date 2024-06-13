@@ -11,6 +11,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     takeDamage(damage) {
+        console.log("enemy took " + damage + " damage!")
         this.health -= damage;
     }
 
