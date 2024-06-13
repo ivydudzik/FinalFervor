@@ -69,7 +69,9 @@ class EnemyManager {
 
     spawnEnemy(enemyType) {
         // console.log(this.enemyTypes);
-        this.enemies[this.totalEnemiesID] = new Enemy(this.scene, this.player, game.config.width / 2 + Phaser.Math.Between(-50, 50), game.config.height / 2 + 50 + Phaser.Math.Between(-50, 50), this.enemyTypes[enemyType].image, null, this.enemyTypes[enemyType].health, this.enemyTypes[enemyType].speed, this.enemyTypes[enemyType].damage);
+        var offset1 = Phaser.Utils.Array.GetRandom([-1, 1]);
+        var offset2 = Phaser.Utils.Array.GetRandom([-1, 1]);
+        this.enemies[this.totalEnemiesID] = new Enemy(this.scene, this.player, this.player.body.x + (Phaser.Math.Between(50, 150) * offset1), this.player.body.y + (Phaser.Math.Between(50, 150) * offset2), this.enemyTypes[enemyType].image, null, this.enemyTypes[enemyType].health, this.enemyTypes[enemyType].speed, this.enemyTypes[enemyType].damage);
 
         // add enemy to the group
         this.enemyGroup.add(this.enemies[this.totalEnemiesID]);
