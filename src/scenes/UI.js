@@ -7,8 +7,21 @@ class UI extends Phaser.Scene {
         //  Grab a reference to the Game Scene
         this.gameScene = this.scene.get('battleScene');
 
-        // Player Health
-        this.playerHealthText = this.add.text(10, 2.5, 0, { fontSize: '36px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+        // Player Health Text
+        this.playerHealthText = this.add.text(5, 0, "HP: " + 0, { fontSize: '36px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#ffdbed" });
+        this.playerHealthText.setOrigin(0, 0);
+        // Player EXP Text
+        this.expText = this.add.text(5, 33, "EXP: " + 0, { fontSize: '36px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#fffddb" });
+        this.expText.setOrigin(0, 0);
+        // Player Level Text
+        this.levelText = this.add.text(5, 66, "LVL: " + 0, { fontSize: '36px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#d9fff2" });
+        this.levelText.setOrigin(0, 0);
+        // Timer Text
+        this.timerText = this.add.text(game.config.width - 5, 0, 0, { fontSize: '36px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', color: "#FFFFFF" });
+        this.timerText.setOrigin(1, 0);
+
+        // 5 minute timer
+        this.timer = 0.0;
 
         // Upgrade UI, Changing Text Names May Break this.setUpgradeText()
         this.upgradeUI = {
@@ -47,8 +60,18 @@ class UI extends Phaser.Scene {
         // this.showUpgradeUI();
     }
 
-    update() {
+    update(_time, delta) {
         this.playerHealthText.text = "HP: " + this.gameScene.player.health;
+        this.expText.text = "XP: " + this.gameScene.player.exp + "/" + this.gameScene.player.levelUpRequirements[this.gameScene.player.level];
+        this.levelText.text = "LVL: " + this.gameScene.player.level;
+
+        // Timer Logic
+        this.timer += delta;
+        if (this.timer >= 300 * 1000) {
+            this.gameScene.win();
+        }
+        let t = Phaser.Math.RoundTo(this.timer / 1000);
+        this.timerText.text = "00" + ":" + "0" + Phaser.Math.FloorTo(t / 60) + ":" + (t < 10 ? "0" : "") + t % 60;
     }
 
     // Set text for upgrade like this: this.setUpgradeText("Center", "Body", "This was changed recently! OH GOD!\n\n+100 Pogs\n+1 Pogchamps")

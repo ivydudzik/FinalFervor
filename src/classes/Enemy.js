@@ -1,5 +1,5 @@
 class Enemy extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, player, x, y, texture, frame, health, speed, damage) {
+    constructor(scene, player, x, y, texture, frame, health, speed, damage, expValue) {
         super(scene, x, y, texture, frame);
 
         this.scene = scene;
@@ -15,6 +15,8 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.attackCooldown = 0;
         this.cooldownTime = 2 * 144; // left # in seconds
 
+        this.expValue = expValue;
+
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
@@ -27,31 +29,26 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     dealDamage() {
-        if (this.attackCooldown <= 0)
-        {
+        if (this.attackCooldown <= 0) {
             this.player.takeDamage(this.damage);
             this.attackCooldown = this.cooldownTime;
         }
     }
 
-    preUpdate() { 
+    preUpdate() {
         this.setVelocity(0);
 
-        if (this.body.position.x < ((this.player.body.x + (this.playerOffset / 2)) - this.playerBufferZone))
-        {
+        if (this.body.position.x < ((this.player.body.x + (this.playerOffset / 2)) - this.playerBufferZone)) {
             this.setVelocityX(1);
         }
-        else if (this.body.position.x > ((this.player.body.x + (this.playerOffset / 2)) + this.playerBufferZone))
-        {
+        else if (this.body.position.x > ((this.player.body.x + (this.playerOffset / 2)) + this.playerBufferZone)) {
             this.setVelocityX(-1);
         }
 
-        if (this.body.position.y < ((this.player.body.y + this.playerOffset)  - this.playerBufferZone))
-        {
+        if (this.body.position.y < ((this.player.body.y + this.playerOffset) - this.playerBufferZone)) {
             this.setVelocityY(1);
         }
-        else if (this.body.position.y > ((this.player.body.y + this.playerOffset) + this.playerBufferZone))
-        {
+        else if (this.body.position.y > ((this.player.body.y + this.playerOffset) + this.playerBufferZone)) {
             this.setVelocityY(-1);
         }
 
