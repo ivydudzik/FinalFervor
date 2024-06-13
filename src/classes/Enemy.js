@@ -12,17 +12,25 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.health = health;
         this.speed = speed;
         this.damage = damage;
+        this.attackCooldown = 0;
+        this.cooldownTime = 2 * 144; // left # in seconds
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
-
-        this.body.setBounce(10);
 
         return this;
     }
 
     takeDamage(damage) {
         this.health -= damage;
+    }
+
+    dealDamage() {
+        if (this.attackCooldown <= 0)
+        {
+            this.player.takeDamage(this.damage);
+            this.attackCooldown = this.cooldownTime;
+        }
     }
 
     preUpdate() { 
@@ -50,6 +58,8 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         this.body.velocity.x *= this.speed;
         this.body.velocity.y *= this.speed;
+
+        this.attackCooldown--;
     }
 
 }

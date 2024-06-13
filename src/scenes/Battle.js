@@ -10,9 +10,6 @@ class Battle extends Phaser.Scene {
     create() {
         this.init();
 
-        // set the fps
-        this.physics.world.setFPS(120);
-
         // Create UI
         this.scene.run("UIScene");
         this.UIScene = this.scene.get('UIScene');
@@ -177,6 +174,14 @@ class Battle extends Phaser.Scene {
                 // enemy.setVisible(false);
                 enemy.destroy();
             }
+        });
+    }
+
+    addPlayerEnemyCollision(player, enemyGroup)
+    {
+        this.physics.add.overlap(player, enemyGroup, (player, enemy) => {
+            console.log("enemy hit player");
+            enemy.dealDamage();
         });
     }
 

@@ -7,6 +7,8 @@ class EnemyManager {
 
         // add enemy collision to the enemyGroup
         this.scene.physics.world.addCollider(this.enemyGroup, this.enemyGroup);
+        // add player collision to the enemyGroup
+        this.scene.addPlayerEnemyCollision(this.player, this.enemyGroup);
 
         this.totalEnemiesID = 0;
         this.enemies = [];
@@ -29,7 +31,7 @@ class EnemyManager {
 
         this.enemyTypes = {
             1: { health: 3, image: "furDevilSprite", speed: 50, damage: 1 },
-            2: { health: 7, image: "bushlingSprite", speed: 50, damage: 2 },
+            2: { health: 7, image: "bushlingSprite", speed: 35, damage: 2 },
             3: { health: 4, image: "stingFlySprite", speed: 50, damage: 1 }
         }
 
@@ -69,6 +71,7 @@ class EnemyManager {
         // console.log(this.enemyTypes);
         this.enemies[this.totalEnemiesID] = new Enemy(this.scene, this.player, game.config.width / 2 + Phaser.Math.Between(-50, 50), game.config.height / 2 + 50 + Phaser.Math.Between(-50, 50), this.enemyTypes[enemyType].image, null, this.enemyTypes[enemyType].health, this.enemyTypes[enemyType].speed, this.enemyTypes[enemyType].damage);
 
+        // add enemy to the group
         this.enemyGroup.add(this.enemies[this.totalEnemiesID]);
 
         // Enemy x Player Bullet Collision
