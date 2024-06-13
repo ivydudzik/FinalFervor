@@ -62,9 +62,14 @@ class UI extends Phaser.Scene {
 
     update(_time, delta) {
         this.playerHealthText.text = "HP: " + this.gameScene.player.health;
-        this.expText.text = "XP: " + this.gameScene.player.exp;
+        this.expText.text = "XP: " + this.gameScene.player.exp + "/" + this.gameScene.player.levelUpRequirements[this.gameScene.player.level];
         this.levelText.text = "LVL: " + this.gameScene.player.level;
+
+        // Timer Logic
         this.timer += delta;
+        if (this.timer >= 300 * 1000) {
+            this.gameScene.win();
+        }
         let t = Phaser.Math.RoundTo(this.timer / 1000);
         this.timerText.text = "00" + ":" + "0" + Phaser.Math.FloorTo(t / 60) + ":" + (t < 10 ? "0" : "") + t % 60;
     }

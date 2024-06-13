@@ -2,6 +2,19 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame, health) {
         super(scene, x, y, texture, frame);
         // Level Tracking
+        this.levelUpRequirements = [
+            5, 10, 20, 35,
+            55, 80, 100, 100,
+            100, 100, 100, 100,
+            100, 100, 100, 100,
+            100, 100, 100, 100,
+            100, 100, 100, 100,
+            100, 100, 100, 100,
+            100, 100, 100, 100,
+            100, 100, 100, 100,
+            100, 100, 100, 100,
+            100, 100, 100, 100,
+        ]
         this.level = 0;
         this.exp = 0;
 
